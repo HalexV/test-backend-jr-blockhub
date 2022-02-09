@@ -1,7 +1,13 @@
 version: "3"
 services:
+    mongodb:
+        image: mongo
+        ports:
+            - "27017:27017"
     projects-manager-server:
         build: .
+        depends_on:
+            - mongodb
         ports:
             - "3000:3000"
         volumes:
@@ -10,5 +16,5 @@ services:
             - ./yarn.lock:/usr/app/yarn.lock
             - ./tsconfig.json:/usr/app/tsconfig.json
             - ./tsconfig.build.json:/usr/app/tsconfig.build.json
-            - /usr/app/node_modules
+            - ./node_modules:/usr/app/node_modules
         command: yarn start:dev
