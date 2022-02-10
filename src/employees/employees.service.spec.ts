@@ -5,13 +5,11 @@ import { EmployeesService } from './employees.service';
 import { Employee, EmployeeDocument } from './entities/employee.schema';
 
 let employeeModelConstructorArgs;
-let saveCalls = 0;
 class EmployeeModelStub {
   constructor(private data) {
     employeeModelConstructorArgs = data;
   }
   save() {
-    saveCalls++;
     return {
       name: 'test',
       post: 'tester',
@@ -42,7 +40,6 @@ describe('EmployeesService', () => {
     );
 
     employeeModelConstructorArgs = null;
-    saveCalls = 0;
   });
 
   afterEach(() => {
@@ -57,6 +54,7 @@ describe('EmployeesService', () => {
   describe('create', () => {
     it('should be able to create an employee', async () => {
       jest.useFakeTimers('modern').setSystemTime(new Date('2020-01-01'));
+      const saveSpy = jest.spyOn(employeeModel.prototype, 'save');
 
       const expected = {
         name: 'test',
@@ -74,7 +72,7 @@ describe('EmployeesService', () => {
 
       expect(result).toEqual(expected);
       expect(employeeModelConstructorArgs).toEqual(createEmployeeDto);
-      expect(saveCalls).toBe(1);
+      expect(saveSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
