@@ -9,12 +9,21 @@ class EmployeeModelStub {
   constructor(private data) {
     employeeModelConstructorArgs = data;
   }
-  save() {
+  async save() {
     return {
       name: 'test',
       post: 'tester',
       admission: new Date('2020-01-01'),
       active: true,
+    };
+  }
+
+  static async findByIdAndUpdate() {
+    return {
+      name: 'test1',
+      post: 'tester1',
+      admission: new Date('2020-01-02'),
+      active: false,
     };
   }
 }
@@ -88,6 +97,40 @@ describe('EmployeesService', () => {
       const result = employeeService.create(createEmployeeDto);
 
       await expect(result).rejects.toThrowError();
+    });
+  });
+
+  describe('Update', () => {
+    it('should be able to update an employee', async () => {
+      const findByIdAndUpdateSpy = jest.spyOn(
+        employeeModel,
+        'findByIdAndUpdate',
+      );
+
+      const updateEmployeeDto = {
+        name: 'test1',
+        post: 'tester1',
+        admission: new Date('2020-01-02'),
+        active: false,
+      };
+
+      const employeeUpdated = {
+        name: 'test1',
+        post: 'tester1',
+        admission: new Date('2020-01-02'),
+        active: false,
+      };
+
+      const result = await employeeService.update('any', updateEmployeeDto);
+
+      expect(result).toEqual(employeeUpdated);
+      expect(findByIdAndUpdateSpy).toHaveBeenCalledWith(
+        'any',
+        updateEmployeeDto,
+        {
+          returnDocument: 'after',
+        },
+      );
     });
   });
 });
