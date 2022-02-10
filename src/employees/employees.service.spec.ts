@@ -74,5 +74,20 @@ describe('EmployeesService', () => {
       expect(employeeModelConstructorArgs).toEqual(createEmployeeDto);
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw when save throws', async () => {
+      jest
+        .spyOn(employeeModel.prototype, 'save')
+        .mockRejectedValueOnce(new Error());
+
+      const createEmployeeDto = {
+        name: 'test',
+        post: 'tester',
+      };
+
+      const result = employeeService.create(createEmployeeDto);
+
+      await expect(result).rejects.toThrowError();
+    });
   });
 });
