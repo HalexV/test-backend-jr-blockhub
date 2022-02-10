@@ -15,4 +15,13 @@ export class EmployeesService {
     const employee = new this.employeeModel(createEmployeeDto);
     return await employee.save();
   }
+
+  async update(
+    id: string,
+    updateEmployeeDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
+    return await this.employeeModel.findByIdAndUpdate(id, updateEmployeeDto, {
+      returnDocument: 'after',
+    });
+  }
 }
