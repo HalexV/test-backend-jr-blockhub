@@ -28,4 +28,8 @@ export class EmployeesService {
   async findById(id: string): Promise<Employee> {
     return await this.employeeModel.findById(id);
   }
+
+  async listAll(): Promise<Employee[]> {
+    return await this.employeeModel.find();
+  }
 }

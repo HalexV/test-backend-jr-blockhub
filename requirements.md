@@ -72,7 +72,7 @@
 
 ### Listar vários
 
-- [] Feito
+- [x] Feito
 
 
 ---
