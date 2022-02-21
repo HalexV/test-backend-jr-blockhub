@@ -42,7 +42,7 @@
 
 - A validação dos dados de entrada é feita pelo schema do mongoose
 
-- [] Feito
+- [x] Feito
 
 ## Cadastrar em um projeto
 
