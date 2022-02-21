@@ -12,6 +12,18 @@ export class ProjectsService {
   ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
+    const { startDate, endDate } = createProjectDto;
+
+    const startDateMs = new Date(startDate).getTime();
+    const endDateMs = new Date(endDate).getTime();
+
+    if (endDate && startDateMs < endDateMs) {
+      const error = new Error('startDate must be greater than endDate');
+      error.name = 'ValidationError';
+
+      throw error;
+    }
+
     const project = new this.projectModel(createProjectDto);
     return await project.save();
   }
