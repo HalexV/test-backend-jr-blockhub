@@ -64,5 +64,20 @@ describe('ProjectsService', () => {
       expect(result).toStrictEqual(expected);
       expect(saveSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw when startDate is lesser than endDate', async () => {
+      const createProjectDto: CreateProjectDto = {
+        name: 'test project',
+        description: 'test description',
+        startDate: new Date('2022-01-01'),
+        endDate: new Date(new Date('2022-01-01').getTime() + 1),
+      };
+
+      const result = projectService.create(createProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        'startDate must be greater than endDate',
+      );
+    });
   });
 });
