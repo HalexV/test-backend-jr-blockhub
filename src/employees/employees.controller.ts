@@ -48,7 +48,7 @@ export class EmployeesController {
   @Get('all')
   async listEmployees() {
     try {
-      return await this.employeesService.listAll();
+      return await this.employeesService.findAll();
     } catch (error) {
       throw error;
     }
@@ -57,7 +57,7 @@ export class EmployeesController {
   @Get(':id')
   async listEmployee(@Param('id') id: string) {
     try {
-      return await this.employeesService.findById(id);
+      return await this.employeesService.findOne(id);
     } catch (error) {
       throw error;
     }
