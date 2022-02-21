@@ -17,7 +17,7 @@ export class ProjectsService {
     const startDateMs = new Date(startDate).getTime();
     const endDateMs = new Date(endDate).getTime();
 
-    if (endDate && startDateMs < endDateMs) {
+    if (endDate && startDateMs <= endDateMs) {
       const error = new Error('startDate must be greater than endDate');
       error.name = 'ValidationError';
 
