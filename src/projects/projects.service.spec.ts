@@ -14,6 +14,15 @@ class ProjectModelStub {
       active: true,
     };
   }
+
+  static async findOne() {
+    return {
+      name: 'test project',
+      description: 'test description',
+      startDate: new Date('2022-01-01'),
+      active: true,
+    };
+  }
 }
 
 describe('ProjectsService', () => {
@@ -92,6 +101,22 @@ describe('ProjectsService', () => {
 
       await expect(result).rejects.toThrowError(
         'startDate must be greater than endDate',
+      );
+    });
+
+    it("should throw when the project's name already exists", async () => {
+      jest.spyOn(projectModel, 'findOne').mockResolvedValueOnce(null);
+
+      const createProjectDto: CreateProjectDto = {
+        name: 'test project',
+        description: 'test description',
+        startDate: new Date('2022-01-01'),
+      };
+
+      const result = projectService.create(createProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        "The project's name already exists",
       );
     });
   });
