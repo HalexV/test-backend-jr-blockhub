@@ -12,13 +12,22 @@ export class ProjectsService {
   ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
-    const { startDate, endDate } = createProjectDto;
+    const { startDate, endDate, name } = createProjectDto;
 
     const startDateMs = new Date(startDate).getTime();
     const endDateMs = new Date(endDate).getTime();
 
     if (endDate && startDateMs <= endDateMs) {
       const error = new Error('startDate must be greater than endDate');
+      error.name = 'ValidationError';
+
+      throw error;
+    }
+
+    const projectAlreadyExist = await this.projectModel.findOne({ name });
+
+    if (!projectAlreadyExist) {
+      const error = new Error("The project's name already exists");
       error.name = 'ValidationError';
 
       throw error;
