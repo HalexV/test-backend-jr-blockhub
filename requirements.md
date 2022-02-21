@@ -3,9 +3,8 @@
 - Nesta versão o controle das datas será simples, ou seja, projetos passados podem ser cadastrados e o campo ativo do projeto deverá ser atualizado manualmente.
 
 ## Cadastrar
-
+- O nome deve ser único
 - A validação dos dados de entrada é feita pelo schema do mongoose
-
 - A data de início deve ser menor do que a data de fim
 
 - [] Feito
