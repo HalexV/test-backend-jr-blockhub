@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Patch,
   Param,
+  Get,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -40,6 +41,15 @@ export class EmployeesController {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
 
+      throw error;
+    }
+  }
+
+  @Get(':id')
+  async listEmployee(@Param('id') id: string) {
+    try {
+      return await this.employeesService.findById(id);
+    } catch (error) {
       throw error;
     }
   }

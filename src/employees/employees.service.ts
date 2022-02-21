@@ -24,4 +24,8 @@ export class EmployeesService {
       returnDocument: 'after',
     });
   }
+
+  async findById(id: string): Promise<Employee> {
+    return await this.employeeModel.findById(id);
+  }
 }
