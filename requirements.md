@@ -52,7 +52,7 @@
 
 - Qualquer um dos dados podem ser atualizados
 
-- [] Feito
+- [x] Feito
 
 ## Apagar
 
