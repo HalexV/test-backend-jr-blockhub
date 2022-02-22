@@ -109,6 +109,21 @@ describe('ProjectsService', () => {
       await expect(result).rejects.toThrowError();
     });
 
+    it('should throw when startDate is invalid', async () => {
+      jest
+        .spyOn(projectModel.prototype, 'validate')
+        .mockRejectedValueOnce(new Error());
+      const createProjectDto: CreateProjectDto = {
+        name: 'test project',
+        description: 'test description',
+        startDate: new Date('invalid'),
+      };
+
+      const result = projectService.create(createProjectDto);
+
+      await expect(result).rejects.toThrowError();
+    });
+
     it('should throw when startDate is lesser than endDate', async () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
