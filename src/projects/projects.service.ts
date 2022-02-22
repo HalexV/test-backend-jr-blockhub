@@ -14,6 +14,9 @@ export class ProjectsService {
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     const { startDate, endDate, name } = createProjectDto;
 
+    const project = new this.projectModel(createProjectDto);
+    await project.validate();
+
     const startDateMs = new Date(startDate).getTime();
     const endDateMs = new Date(endDate).getTime();
 
@@ -33,7 +36,6 @@ export class ProjectsService {
       throw error;
     }
 
-    const project = new this.projectModel(createProjectDto);
     return await project.save();
   }
 
