@@ -53,6 +53,7 @@ describe('ProjectsService', () => {
 
   describe('create', () => {
     it('should be able to create a project', async () => {
+      jest.spyOn(projectModel, 'findOne').mockResolvedValueOnce(null);
       const saveSpy = jest.spyOn(projectModel.prototype, 'save');
 
       const createProjectDto: CreateProjectDto = {
@@ -105,8 +106,6 @@ describe('ProjectsService', () => {
     });
 
     it("should throw when the project's name already exists", async () => {
-      jest.spyOn(projectModel, 'findOne').mockResolvedValueOnce(null);
-
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',

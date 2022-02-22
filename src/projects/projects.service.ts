@@ -26,7 +26,7 @@ export class ProjectsService {
 
     const projectAlreadyExist = await this.projectModel.findOne({ name });
 
-    if (!projectAlreadyExist) {
+    if (projectAlreadyExist) {
       const error = new Error("The project's name already exists");
       error.name = 'ValidationError';
 
