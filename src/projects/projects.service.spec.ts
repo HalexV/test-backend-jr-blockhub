@@ -15,6 +15,10 @@ class ProjectModelStub {
     };
   }
 
+  async validate() {
+    return;
+  }
+
   static async findOne() {
     return {
       name: 'test project',
@@ -73,6 +77,21 @@ describe('ProjectsService', () => {
 
       expect(result).toStrictEqual(expected);
       expect(saveSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw when name is invalid', async () => {
+      jest
+        .spyOn(projectModel.prototype, 'validate')
+        .mockRejectedValueOnce(new Error());
+      const createProjectDto: CreateProjectDto = {
+        name: 'invalid',
+        description: 'test description',
+        startDate: new Date('2022-01-01'),
+      };
+
+      const result = projectService.create(createProjectDto);
+
+      await expect(result).rejects.toThrowError();
     });
 
     it('should throw when startDate is lesser than endDate', async () => {
