@@ -29,4 +29,7 @@ export class Project {
   active: boolean;
 }
 
-export const ProjectSchema = SchemaFactory.createForClass(Project);
+export const ProjectSchema = SchemaFactory.createForClass(Project).set(
+  'validateBeforeSave',
+  false,
+);
