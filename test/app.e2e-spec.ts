@@ -146,6 +146,30 @@ describe('AppController (e2e)', () => {
           'startDate must be lesser than endDate',
         );
       });
+
+      it('should return 400 when name already exists', async () => {
+        dbConnection.collection('projects').insertOne({
+          name: 'test',
+          description: 'test description',
+          startDate: new Date('2022-02-22').getTime(),
+          active: true,
+        });
+
+        const inputPayload = {
+          name: 'test',
+          description: 'test description',
+          startDate: new Date('2022-02-22').getTime(),
+        };
+
+        const response = await request(httpServer)
+          .post('/projects')
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual(
+          "The project's name already exists",
+        );
+      });
     });
   });
 });
