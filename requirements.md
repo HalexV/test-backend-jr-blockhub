@@ -7,7 +7,7 @@
 - A validação dos dados de entrada é feita pelo schema do mongoose
 - A data de início deve ser menor do que a data de fim
 
-- [] Feito
+- [x] Feito
 
 ## Atualizar
 
