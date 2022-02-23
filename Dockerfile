@@ -7,6 +7,7 @@ COPY yarn.lock ./
 COPY src/ ./src/
 COPY tsconfig.json ./
 COPY tsconfig.build.json ./
+COPY .env ./
 
 RUN yarn install
 

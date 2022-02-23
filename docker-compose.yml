@@ -12,6 +12,7 @@ services:
             - "3000:3000"
         volumes:
             - ./src/:/usr/app/src/
+            - ./.env:/usr/app/.env
             - ./package.json:/usr/app/package.json
             - ./yarn.lock:/usr/app/yarn.lock
             - ./tsconfig.json:/usr/app/tsconfig.json
