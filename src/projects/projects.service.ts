@@ -47,8 +47,33 @@ export class ProjectsService {
     return `This action returns a #${id} project`;
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  async update(id: string, updateProjectDto: UpdateProjectDto) {
+    const { name } = updateProjectDto;
+
+    const project = await this.projectModel.findById(id);
+
+    if (!project) {
+      const error = new Error('Project not found');
+      error.name = 'ValidationError';
+
+      throw error;
+    }
+
+    if (name) {
+      const projectAlreadyExist = await this.projectModel.findOne({
+        _id: { $ne: id },
+        name,
+      });
+
+      if (projectAlreadyExist) {
+        const error = new Error("The project's name already exists");
+        error.name = 'ValidationError';
+
+        throw error;
+      }
+    }
+
+    return null;
   }
 
   remove(id: number) {
