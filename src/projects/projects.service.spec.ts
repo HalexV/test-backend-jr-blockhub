@@ -2,6 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project, ProjectDocument } from './entities/project.schema';
 import { ProjectsService } from './projects.service';
 
@@ -24,6 +25,16 @@ class ProjectModelStub {
       name: 'test project',
       description: 'test description',
       startDate: new Date('2022-01-01'),
+      active: true,
+    };
+  }
+
+  static async findById() {
+    return {
+      name: 'test project',
+      description: 'test description',
+      startDate: new Date('2022-01-01'),
+      endDate: new Date('2022-01-02'),
       active: true,
     };
   }
@@ -182,6 +193,32 @@ describe('ProjectsService', () => {
       await expect(result).rejects.toThrowError(
         "The project's name already exists",
       );
+    });
+  });
+
+  describe('update', () => {
+    it("should throw when the project's name already exists", async () => {
+      const updateProjectDto: UpdateProjectDto = {
+        name: 'test project',
+      };
+
+      const result = projectService.update('any_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        "The project's name already exists",
+      );
+    });
+
+    it('should throw when the project does not exist', async () => {
+      jest.spyOn(projectModel, 'findById').mockResolvedValueOnce(null);
+
+      const updateProjectDto: UpdateProjectDto = {
+        name: 'test project',
+      };
+
+      const result = projectService.update('invalid_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError('Project not found');
     });
   });
 });
