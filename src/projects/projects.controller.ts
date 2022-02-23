@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -16,8 +18,16 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.create(createProjectDto);
+  async create(@Body() createProjectDto: CreateProjectDto) {
+    try {
+      return await this.projectsService.create(createProjectDto);
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw error;
+    }
   }
 
   @Get()
