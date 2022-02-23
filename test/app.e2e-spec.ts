@@ -81,6 +81,20 @@ describe('AppController (e2e)', () => {
 
         expect(response.status).toBe(400);
       });
+
+      it('should return 400 when creating with invalid startDate', async () => {
+        const inputPayload = {
+          name: 'test',
+          description: 'test description',
+          startDate: 'invalid',
+        };
+
+        const response = await request(httpServer)
+          .post('/projects')
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+      });
     });
   });
 });
