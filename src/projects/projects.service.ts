@@ -1,21 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { Project, ProjectDocument } from './entities/project.schema';
+import { Project } from './entities/project.schema';
+import { IProjectsRepository } from './repositories/interface.projects.repository';
+import { ProjectsMongoRepository } from './repositories/projects.mongo.repository';
 
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
+    @Inject(ProjectsMongoRepository)
+    private readonly projectsRepository: IProjectsRepository,
   ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     const { startDate, endDate, name } = createProjectDto;
-
-    const project = new this.projectModel(createProjectDto);
-    await project.validate();
 
     const startDateMs = new Date(startDate).getTime();
     const endDateMs = new Date(endDate).getTime();
@@ -27,7 +25,9 @@ export class ProjectsService {
       throw error;
     }
 
-    const projectAlreadyExist = await this.projectModel.findOne({ name });
+    const projectAlreadyExist = await this.projectsRepository.findOneByName(
+      name,
+    );
 
     if (projectAlreadyExist) {
       const error = new Error("The project's name already exists");
@@ -36,7 +36,7 @@ export class ProjectsService {
       throw error;
     }
 
-    return await project.save();
+    return await this.projectsRepository.create(createProjectDto);
   }
 
   findAll() {
@@ -48,30 +48,34 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
-    const { name } = updateProjectDto;
+    // const { name } = updateProjectDto;
 
-    const project = await this.projectModel.findById(id);
+    // const project = await this.projectModel.findById(id);
 
-    if (!project) {
-      const error = new Error('Project not found');
-      error.name = 'ValidationError';
+    // if (!project) {
+    //   const error = new Error('Project not found');
+    //   error.name = 'ValidationError';
 
-      throw error;
-    }
+    //   throw error;
+    // }
 
-    if (name) {
-      const projectAlreadyExist = await this.projectModel.findOne({
-        _id: { $ne: id },
-        name,
-      });
+    // if (name) {
+    //   const projectAlreadyExist = await this.projectModel.findOne({
+    //     _id: { $ne: id },
+    //     name,
+    //   });
 
-      if (projectAlreadyExist) {
-        const error = new Error("The project's name already exists");
-        error.name = 'ValidationError';
+    //   if (projectAlreadyExist) {
+    //     const error = new Error("The project's name already exists");
+    //     error.name = 'ValidationError';
 
-        throw error;
-      }
-    }
+    //     throw error;
+    //   }
+    // }
+
+    // project.name = name;
+
+    // return await project.save();
 
     return null;
   }

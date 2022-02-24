@@ -26,6 +26,10 @@ export class ProjectsController {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
 
+      if (error.name === 'CastError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
       throw error;
     }
   }
