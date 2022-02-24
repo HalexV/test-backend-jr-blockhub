@@ -48,30 +48,29 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
-    // const { name } = updateProjectDto;
+    const { name } = updateProjectDto;
 
-    // const project = await this.projectModel.findById(id);
+    const project = await this.projectsRepository.findById(id);
 
-    // if (!project) {
-    //   const error = new Error('Project not found');
-    //   error.name = 'ValidationError';
+    if (!project) {
+      const error = new Error('Project not found');
+      error.name = 'ValidationError';
 
-    //   throw error;
-    // }
+      throw error;
+    }
 
-    // if (name) {
-    //   const projectAlreadyExist = await this.projectModel.findOne({
-    //     _id: { $ne: id },
-    //     name,
-    //   });
+    if (name) {
+      const projectAlreadyExist = await this.projectsRepository.findOneByName(
+        name,
+      );
 
-    //   if (projectAlreadyExist) {
-    //     const error = new Error("The project's name already exists");
-    //     error.name = 'ValidationError';
+      if (projectAlreadyExist) {
+        const error = new Error("The project's name already exists");
+        error.name = 'ValidationError';
 
-    //     throw error;
-    //   }
-    // }
+        throw error;
+      }
+    }
 
     // project.name = name;
 

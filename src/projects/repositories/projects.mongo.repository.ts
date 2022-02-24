@@ -15,8 +15,17 @@ export class ProjectsMongoRepository implements IProjectsRepository {
     const newProject = await new this.projectModel(project);
     return await newProject.save();
   }
+
   async findOneByName(name: string): Promise<Project> {
     const project = await this.projectModel.findOne({ name });
+
+    if (!project) return null;
+
+    return project.toObject();
+  }
+
+  async findById(id: string): Promise<Project> {
+    const project = await this.projectModel.findById(id);
 
     if (!project) return null;
 
