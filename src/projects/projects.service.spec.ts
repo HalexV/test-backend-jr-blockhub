@@ -4,12 +4,15 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectsService } from './projects.service';
 import { ProjectsMongoRepository } from './repositories/projects.mongo.repository';
 
+const START_DATE = new Date('2022-01-01');
+const END_DATE = new Date('2022-01-02');
+
 class ProjectsMongoRepositoryStub {
   async create() {
     return {
       name: 'test project',
       description: 'test description',
-      startDate: new Date('2022-01-01'),
+      startDate: START_DATE,
       active: true,
     };
   }
@@ -18,7 +21,7 @@ class ProjectsMongoRepositoryStub {
     return {
       name: 'test project test',
       description: 'test description',
-      startDate: new Date('2022-01-01'),
+      startDate: START_DATE,
       active: true,
     };
   }
@@ -27,7 +30,7 @@ class ProjectsMongoRepositoryStub {
     return {
       name: 'test project',
       description: 'test description',
-      startDate: new Date('2022-01-01'),
+      startDate: START_DATE,
       active: true,
     };
   }
@@ -36,8 +39,8 @@ class ProjectsMongoRepositoryStub {
     return {
       name: 'test project',
       description: 'test description',
-      startDate: new Date('2022-01-01'),
-      endDate: new Date('2022-01-02'),
+      startDate: START_DATE,
+      endDate: END_DATE,
       active: true,
     };
   }
@@ -78,13 +81,13 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
       };
 
       const expected = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
         active: true,
       };
 
@@ -100,7 +103,7 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'invalid',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
       };
 
       const result = projectService.create(createProjectDto);
@@ -115,7 +118,7 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'invalid',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
       };
 
       const result = projectService.create(createProjectDto);
@@ -145,7 +148,7 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
         endDate: new Date('invalid'),
       };
 
@@ -158,8 +161,8 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
-        endDate: new Date(new Date('2022-01-01').getTime() - 1),
+        startDate: START_DATE,
+        endDate: new Date(START_DATE.getTime() - 1),
       };
 
       const result = projectService.create(createProjectDto);
@@ -173,8 +176,8 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
-        endDate: new Date('2022-01-01'),
+        startDate: START_DATE,
+        endDate: START_DATE,
       };
 
       const result = projectService.create(createProjectDto);
@@ -188,7 +191,7 @@ describe('ProjectsService', () => {
       const createProjectDto: CreateProjectDto = {
         name: 'test project',
         description: 'test description',
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
       };
 
       const result = projectService.create(createProjectDto);
@@ -239,8 +242,8 @@ describe('ProjectsService', () => {
 
     it('should throw when input startDate is greater than input endDate', async () => {
       const updateProjectDto: UpdateProjectDto = {
-        startDate: new Date(new Date('2022-01-02').getTime() + 1),
-        endDate: new Date('2022-01-02'),
+        startDate: new Date(END_DATE.getTime() + 1),
+        endDate: END_DATE,
       };
 
       const result = projectService.update('valid_id', updateProjectDto);
@@ -252,7 +255,7 @@ describe('ProjectsService', () => {
 
     it('should throw when input startDate is greater than database endDate', async () => {
       const updateProjectDto: UpdateProjectDto = {
-        startDate: new Date(new Date('2022-01-02').getTime() + 1),
+        startDate: new Date(END_DATE.getTime() + 1),
       };
 
       const result = projectService.update('valid_id', updateProjectDto);
@@ -264,7 +267,7 @@ describe('ProjectsService', () => {
 
     it('should throw when input startDate is equal to database endDate', async () => {
       const updateProjectDto: UpdateProjectDto = {
-        startDate: new Date('2022-01-02'),
+        startDate: END_DATE,
       };
 
       const result = projectService.update('valid_id', updateProjectDto);
@@ -276,8 +279,8 @@ describe('ProjectsService', () => {
 
     it('should throw when input startDate is equal to input endDate', async () => {
       const updateProjectDto: UpdateProjectDto = {
-        startDate: new Date('2022-01-02'),
-        endDate: new Date('2022-01-02'),
+        startDate: END_DATE,
+        endDate: END_DATE,
       };
 
       const result = projectService.update('valid_id', updateProjectDto);
@@ -299,7 +302,7 @@ describe('ProjectsService', () => {
 
     it('should throw when input endDate is invalid', async () => {
       const updateProjectDto1: UpdateProjectDto = {
-        startDate: new Date('2022-01-01'),
+        startDate: START_DATE,
         endDate: new Date('invalid'),
       };
 
@@ -316,7 +319,19 @@ describe('ProjectsService', () => {
 
     it('should throw when input endDate is lesser than database startDate', async () => {
       const updateProjectDto: UpdateProjectDto = {
-        endDate: new Date(new Date('2022-01-01').getTime() - 1),
+        endDate: new Date(START_DATE.getTime() - 1),
+      };
+
+      const result = projectService.update('valid_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        'endDate must be greater than startDate',
+      );
+    });
+
+    it('should throw when input endDate is equal to database startDate', async () => {
+      const updateProjectDto: UpdateProjectDto = {
+        endDate: START_DATE,
       };
 
       const result = projectService.update('valid_id', updateProjectDto);
