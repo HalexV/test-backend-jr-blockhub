@@ -72,12 +72,30 @@ export class ProjectsService {
       if (endDate) {
         const objEndDate = new Date(endDate);
 
+        if (objEndDate.toString() === 'Invalid Date') {
+          const error = new Error('endDate must be a date');
+          error.name = 'ValidationError';
+
+          throw error;
+        }
+
         if (objStartDate.getTime() >= objEndDate.getTime()) {
           const error = new Error('startDate must be lesser than endDate');
           error.name = 'ValidationError';
 
           throw error;
         }
+      }
+    }
+
+    if (endDate) {
+      const objEndDate = new Date(endDate);
+
+      if (objEndDate.toString() === 'Invalid Date') {
+        const error = new Error('endDate must be a date');
+        error.name = 'ValidationError';
+
+        throw error;
       }
     }
 
