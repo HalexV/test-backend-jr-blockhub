@@ -104,6 +104,13 @@ export class ProjectsService {
 
         throw error;
       }
+
+      if (objEndDate.getTime() <= project.startDate.getTime()) {
+        const error = new Error('endDate must be greater than startDate');
+        error.name = 'ValidationError';
+
+        throw error;
+      }
     }
 
     if (name) {
