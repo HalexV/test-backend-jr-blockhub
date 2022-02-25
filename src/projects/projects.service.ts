@@ -72,11 +72,7 @@ export class ProjectsService {
       }
     }
 
-    // project.name = name;
-
-    // return await project.save();
-
-    return null;
+    return await this.projectsRepository.update(id, updateProjectDto);
   }
 
   remove(id: number) {

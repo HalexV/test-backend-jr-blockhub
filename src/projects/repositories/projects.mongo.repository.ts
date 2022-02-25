@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateProjectDto } from '../dto/create-project.dto';
+import { UpdateProjectDto } from '../dto/update-project.dto';
 import { Project, ProjectDocument } from '../entities/project.schema';
 import { IProjectsRepository } from './interface.projects.repository';
 
@@ -14,6 +15,13 @@ export class ProjectsMongoRepository implements IProjectsRepository {
   async create(project: CreateProjectDto): Promise<Project> {
     const newProject = await new this.projectModel(project);
     return await newProject.save();
+  }
+
+  async update(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
+    throw new Error('Method not implemented.');
   }
 
   async findOneByName(name: string): Promise<Project> {
