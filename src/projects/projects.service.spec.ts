@@ -37,6 +37,7 @@ class ProjectsMongoRepositoryStub {
       name: 'test project',
       description: 'test description',
       startDate: new Date('2022-01-01'),
+      endDate: new Date('2022-01-02'),
       active: true,
     };
   }
@@ -234,6 +235,19 @@ describe('ProjectsService', () => {
       };
       const result = projectService.update('invalid_id', updateProjectDto);
       await expect(result).rejects.toThrowError('Project not found');
+    });
+
+    it('should throw when input startDate is greater than input endDate', async () => {
+      const updateProjectDto: UpdateProjectDto = {
+        startDate: new Date(new Date('2022-01-02').getTime() + 1),
+        endDate: new Date('2022-01-02'),
+      };
+
+      const result = projectService.update('valid_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        'startDate must be lesser than endDate',
+      );
     });
   });
 });
