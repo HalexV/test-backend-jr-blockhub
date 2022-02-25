@@ -7,6 +7,14 @@ import { ProjectsMongoRepository } from './repositories/projects.mongo.repositor
 const START_DATE = new Date('2022-01-01');
 const END_DATE = new Date('2022-01-02');
 
+const VALID_PROJECT = {
+  name: 'test project',
+  description: 'test description',
+  startDate: START_DATE,
+  endDate: END_DATE,
+  active: true,
+};
+
 class ProjectsMongoRepositoryStub {
   async create() {
     return {
@@ -18,31 +26,15 @@ class ProjectsMongoRepositoryStub {
   }
 
   async update() {
-    return {
-      name: 'test project test',
-      description: 'test description',
-      startDate: START_DATE,
-      active: true,
-    };
+    return Object.assign({}, VALID_PROJECT, { name: 'test project test' });
   }
 
   async findOneByName() {
-    return {
-      name: 'test project',
-      description: 'test description',
-      startDate: START_DATE,
-      active: true,
-    };
+    return VALID_PROJECT;
   }
 
   async findById() {
-    return {
-      name: 'test project',
-      description: 'test description',
-      startDate: START_DATE,
-      endDate: END_DATE,
-      active: true,
-    };
+    return VALID_PROJECT;
   }
 }
 
