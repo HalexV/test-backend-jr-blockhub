@@ -313,5 +313,17 @@ describe('ProjectsService', () => {
       const result2 = projectService.update('valid_id', updateProjectDto2);
       await expect(result2).rejects.toThrowError('endDate must be a date');
     });
+
+    it('should throw when input endDate is lesser than database startDate', async () => {
+      const updateProjectDto: UpdateProjectDto = {
+        endDate: new Date(new Date('2022-01-01').getTime() - 1),
+      };
+
+      const result = projectService.update('valid_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        'endDate must be greater than startDate',
+      );
+    });
   });
 });
