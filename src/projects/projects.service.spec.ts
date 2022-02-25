@@ -14,6 +14,15 @@ class ProjectsMongoRepositoryStub {
     };
   }
 
+  async update() {
+    return {
+      name: 'test project test',
+      description: 'test description',
+      startDate: new Date('2022-01-01'),
+      active: true,
+    };
+  }
+
   async findOneByName() {
     return {
       name: 'test project',
@@ -199,21 +208,23 @@ describe('ProjectsService', () => {
         "The project's name already exists",
       );
     });
-    //   it("should update the project's name when the name is valid", async () => {
-    //     const expected = {
-    //       name: 'test project test',
-    //     };
-    //     jest.spyOn(projectModel, 'findOne').mockResolvedValueOnce(null);
-    //     const saveSpy = jest
-    //       .spyOn(projectModel.prototype, 'save')
-    //       .mockResolvedValueOnce(expected);
-    //     const updateProjectDto: UpdateProjectDto = {
-    //       name: 'test project test',
-    //     };
-    //     const result = await projectService.update('valid_id', updateProjectDto);
-    //     expect(result).toStrictEqual(expected);
-    //     expect(saveSpy).toHaveBeenCalledTimes(1);
-    //   });
+
+    it("should update the project's name when the name is valid", async () => {
+      const expected = {
+        name: 'test project test',
+      };
+
+      jest
+        .spyOn(projectsMongoRepository, 'findOneByName')
+        .mockResolvedValueOnce(null);
+
+      const updateProjectDto: UpdateProjectDto = {
+        name: 'test project test',
+      };
+      const result = await projectService.update('valid_id', updateProjectDto);
+      expect(result.name).toStrictEqual(expected.name);
+    });
+
     it('should throw when the project does not exist', async () => {
       jest
         .spyOn(projectsMongoRepository, 'findById')
