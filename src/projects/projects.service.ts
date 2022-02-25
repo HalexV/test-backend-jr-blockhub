@@ -62,6 +62,13 @@ export class ProjectsService {
     if (startDate) {
       const objStartDate = new Date(startDate);
 
+      if (objStartDate.toString() === 'Invalid Date') {
+        const error = new Error('startDate must be a date');
+        error.name = 'ValidationError';
+
+        throw error;
+      }
+
       if (endDate) {
         const objEndDate = new Date(endDate);
 
