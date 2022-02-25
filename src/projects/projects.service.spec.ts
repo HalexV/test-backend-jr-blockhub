@@ -250,6 +250,19 @@ describe('ProjectsService', () => {
       );
     });
 
+    it('should throw when input startDate is equal to input endDate', async () => {
+      const updateProjectDto: UpdateProjectDto = {
+        startDate: new Date('2022-01-02'),
+        endDate: new Date('2022-01-02'),
+      };
+
+      const result = projectService.update('valid_id', updateProjectDto);
+
+      await expect(result).rejects.toThrowError(
+        'startDate must be lesser than endDate',
+      );
+    });
+
     it('should throw when input startDate is invalid', async () => {
       const updateProjectDto: UpdateProjectDto = {
         startDate: new Date('invalid'),
