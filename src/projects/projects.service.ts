@@ -48,7 +48,7 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
-    const { name } = updateProjectDto;
+    const { name, startDate, endDate } = updateProjectDto;
 
     const project = await this.projectsRepository.findById(id);
 
@@ -57,6 +57,21 @@ export class ProjectsService {
       error.name = 'ValidationError';
 
       throw error;
+    }
+
+    if (startDate) {
+      const objStartDate = new Date(startDate);
+
+      if (endDate) {
+        const objEndDate = new Date(endDate);
+
+        if (objStartDate.getTime() >= objEndDate.getTime()) {
+          const error = new Error('startDate must be lesser than endDate');
+          error.name = 'ValidationError';
+
+          throw error;
+        }
+      }
     }
 
     if (name) {
