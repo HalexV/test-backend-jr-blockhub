@@ -5,7 +5,10 @@ import { ProjectsService } from './projects.service';
 import { ProjectsMongoRepository } from './repositories/projects.mongo.repository';
 
 const START_DATE = new Date('2022-01-01');
+const UPDATED_START_DATE = new Date('2021-01-01');
+
 const END_DATE = new Date('2022-01-02');
+const UPDATED_END_DATE = new Date('2022-01-04');
 
 const VALID_PROJECT = {
   name: 'test project',
@@ -13,6 +16,14 @@ const VALID_PROJECT = {
   startDate: START_DATE,
   endDate: END_DATE,
   active: true,
+};
+
+const VALID_UPDATED_PROJECT = {
+  name: 'test project test',
+  description: 'test description test',
+  startDate: UPDATED_START_DATE,
+  endDate: UPDATED_END_DATE,
+  active: false,
 };
 
 class ProjectsMongoRepositoryStub {
@@ -26,7 +37,7 @@ class ProjectsMongoRepositoryStub {
   }
 
   async update() {
-    return Object.assign({}, VALID_PROJECT, { name: 'test project test' });
+    return VALID_UPDATED_PROJECT;
   }
 
   async findOneByName() {
@@ -219,6 +230,20 @@ describe('ProjectsService', () => {
       };
       const result = await projectService.update('valid_id', updateProjectDto);
       expect(result.name).toStrictEqual(expected.name);
+    });
+
+    it("should update the project's startDate when the startDate is valid", async () => {
+      const expected = VALID_UPDATED_PROJECT;
+
+      jest
+        .spyOn(projectsMongoRepository, 'findOneByName')
+        .mockResolvedValueOnce(null);
+
+      const updateProjectDto: UpdateProjectDto = {
+        startDate: UPDATED_START_DATE,
+      };
+      const result = await projectService.update('valid_id', updateProjectDto);
+      expect(result.startDate).toStrictEqual(expected.startDate);
     });
 
     it('should throw when the project does not exist', async () => {
