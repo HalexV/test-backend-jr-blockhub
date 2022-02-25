@@ -259,5 +259,22 @@ describe('ProjectsService', () => {
 
       await expect(result).rejects.toThrowError('startDate must be a date');
     });
+
+    it('should throw when input endDate is invalid', async () => {
+      const updateProjectDto1: UpdateProjectDto = {
+        startDate: new Date('2022-01-01'),
+        endDate: new Date('invalid'),
+      };
+
+      const result1 = projectService.update('valid_id', updateProjectDto1);
+      await expect(result1).rejects.toThrowError('endDate must be a date');
+
+      const updateProjectDto2: UpdateProjectDto = {
+        endDate: new Date('invalid'),
+      };
+
+      const result2 = projectService.update('valid_id', updateProjectDto2);
+      await expect(result2).rejects.toThrowError('endDate must be a date');
+    });
   });
 });
