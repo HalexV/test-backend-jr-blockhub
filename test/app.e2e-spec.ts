@@ -502,6 +502,37 @@ describe('AppController (e2e)', () => {
           'endDate must be greater than startDate',
         );
       });
+
+      it('should return 200 when a project is updated', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            endDate: new Date('2022-02-23'),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        const inputPayload = {
+          name: 'test test',
+          description: 'test description test',
+          startDate: new Date('2022-02-25').toISOString(),
+          endDate: new Date(new Date('2022-02-25').getTime() + 1).toISOString(),
+          active: false,
+        };
+
+        const expected = inputPayload;
+
+        response = await request(httpServer)
+          .patch(`/projects/${id}`)
+          .send(inputPayload);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject(expected);
+      });
     });
   });
 });
