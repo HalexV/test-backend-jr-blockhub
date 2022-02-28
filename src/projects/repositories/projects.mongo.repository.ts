@@ -21,7 +21,9 @@ export class ProjectsMongoRepository implements IProjectsRepository {
     id: string,
     updateProjectDto: UpdateProjectDto,
   ): Promise<Project> {
-    return await this.projectModel.findByIdAndUpdate(id, updateProjectDto);
+    return await this.projectModel.findByIdAndUpdate(id, updateProjectDto, {
+      returnDocument: 'after',
+    });
   }
 
   async findOneByName(name: string): Promise<Project> {
