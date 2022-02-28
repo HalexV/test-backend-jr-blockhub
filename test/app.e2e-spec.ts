@@ -28,6 +28,7 @@ describe('AppController (e2e)', () => {
   });
 
   afterAll(async () => {
+    await dbConnection.collection('projects').deleteMany({});
     await app.close();
   });
 
@@ -148,7 +149,7 @@ describe('AppController (e2e)', () => {
       });
 
       it('should return 400 when name already exists', async () => {
-        dbConnection.collection('projects').insertOne({
+        await dbConnection.collection('projects').insertOne({
           name: 'test',
           description: 'test description',
           startDate: new Date('2022-02-22').getTime(),
@@ -163,6 +164,43 @@ describe('AppController (e2e)', () => {
 
         const response = await request(httpServer)
           .post('/projects')
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual(
+          "The project's name already exists",
+        );
+      });
+    });
+
+    describe('/projects/:id (PATCH)', () => {
+      it('should return 400 when name already exists', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test2',
+            description: 'test2 description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const inputPayload = {
+          name: 'test2',
+        };
+
+        response = await request(httpServer)
+          .patch(`/projects/${id}`)
           .send(inputPayload);
 
         expect(response.status).toBe(400);
