@@ -54,7 +54,7 @@ export class ProjectsService {
 
     if (!project) {
       const error = new Error('Project not found');
-      error.name = 'ValidationError';
+      error.name = 'NotFoundError';
 
       throw error;
     }

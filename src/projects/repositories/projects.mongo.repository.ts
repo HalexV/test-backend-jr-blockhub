@@ -33,10 +33,14 @@ export class ProjectsMongoRepository implements IProjectsRepository {
   }
 
   async findById(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id);
+    try {
+      const project = await this.projectModel.findById(id);
 
-    if (!project) return null;
+      if (!project) return null;
 
-    return project.toObject();
+      return project.toObject();
+    } catch (error) {
+      return null;
+    }
   }
 }
