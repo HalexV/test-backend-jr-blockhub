@@ -21,7 +21,7 @@ export class ProjectsMongoRepository implements IProjectsRepository {
     id: string,
     updateProjectDto: UpdateProjectDto,
   ): Promise<Project> {
-    throw new Error('Method not implemented.');
+    return await this.projectModel.findByIdAndUpdate(id, updateProjectDto);
   }
 
   async findOneByName(name: string): Promise<Project> {
