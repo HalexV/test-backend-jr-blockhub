@@ -174,6 +174,21 @@ describe('AppController (e2e)', () => {
     });
 
     describe('/projects/:id (PATCH)', () => {
+      it('should return 404 when the project is not found', async () => {
+        const inputPayload = {
+          name: 'test2',
+        };
+
+        const id = 'invalid_id';
+
+        const response = await request(httpServer)
+          .patch(`/projects/${id}`)
+          .send(inputPayload);
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toEqual('Project not found');
+      });
+
       it('should return 400 when name already exists', async () => {
         let response = await request(httpServer)
           .post('/projects')
