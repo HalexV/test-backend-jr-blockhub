@@ -246,6 +246,20 @@ describe('ProjectsService', () => {
       expect(result.startDate).toStrictEqual(expected.startDate);
     });
 
+    it("should update the project's endDate when the endDate is valid", async () => {
+      const expected = VALID_UPDATED_PROJECT;
+
+      jest
+        .spyOn(projectsMongoRepository, 'findOneByName')
+        .mockResolvedValueOnce(null);
+
+      const updateProjectDto: UpdateProjectDto = {
+        endDate: UPDATED_END_DATE,
+      };
+      const result = await projectService.update('valid_id', updateProjectDto);
+      expect(result.endDate).toStrictEqual(expected.endDate);
+    });
+
     it('should throw when the project does not exist', async () => {
       jest
         .spyOn(projectsMongoRepository, 'findById')
