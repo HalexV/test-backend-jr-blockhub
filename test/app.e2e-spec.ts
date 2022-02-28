@@ -340,6 +340,33 @@ describe('AppController (e2e)', () => {
 
         expect(response.status).toBe(400);
       });
+
+      it('should return 400 when input startDate is greater than input endDate', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        const inputPayload = {
+          startDate: new Date('2022-02-22'),
+          endDate: new Date('2022-02-21'),
+        };
+
+        response = await request(httpServer)
+          .patch(`/projects/${id}`)
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual(
+          'startDate must be lesser than endDate',
+        );
+      });
     });
   });
 });
