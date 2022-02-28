@@ -315,6 +315,29 @@ describe('AppController (e2e)', () => {
 
         expect(response.status).toBe(400);
       });
+
+      it('should return 400 when name is invalid', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        const inputPayload = {
+          name: { invalid: 'invalid' },
+        };
+
+        response = await request(httpServer)
+          .patch(`/projects/${id}`)
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+      });
     });
   });
 });
