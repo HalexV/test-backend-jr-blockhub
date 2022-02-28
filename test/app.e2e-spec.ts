@@ -223,6 +223,29 @@ describe('AppController (e2e)', () => {
           "The project's name already exists",
         );
       });
+
+      it('should return 400 when description is invalid', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        const inputPayload = {
+          description: { invalid: 'invalid' },
+        };
+
+        response = await request(httpServer)
+          .patch(`/projects/${id}`)
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+      });
     });
   });
 });
