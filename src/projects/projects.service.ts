@@ -85,13 +85,13 @@ export class ProjectsService {
 
           throw error;
         }
-      }
+      } else {
+        if (objStartDate.getTime() >= project.endDate.getTime()) {
+          const error = new Error('startDate must be lesser than endDate');
+          error.name = 'ValidationError';
 
-      if (objStartDate.getTime() >= project.endDate.getTime()) {
-        const error = new Error('startDate must be lesser than endDate');
-        error.name = 'ValidationError';
-
-        throw error;
+          throw error;
+        }
       }
     }
 
