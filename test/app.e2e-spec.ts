@@ -268,6 +268,7 @@ describe('AppController (e2e)', () => {
           .send(inputPayload);
 
         expect(response.status).toBe(400);
+        expect(response.body.message).toEqual('startDate must be a date');
       });
 
       it('should return 400 when endDate is invalid', async () => {
@@ -291,6 +292,7 @@ describe('AppController (e2e)', () => {
           .send(inputPayload);
 
         expect(response.status).toBe(400);
+        expect(response.body.message).toEqual('endDate must be a date');
       });
 
       it('should return 400 when active is invalid', async () => {
