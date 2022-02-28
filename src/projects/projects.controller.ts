@@ -45,8 +45,23 @@ export class ProjectsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectsService.update(id, updateProjectDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+  ) {
+    try {
+      return await this.projectsService.update(id, updateProjectDto);
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      if (error.name === 'CastError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+
+      throw error;
+    }
   }
 
   @Delete(':id')
