@@ -15,7 +15,7 @@
 - A data de início deve ser menor do que a data de fim
 - A data fim se for atualizada ou inserida após o cadastro deve ser maior do que a data de início 
 
-- [] Feito
+- [x] Feito
 
 ## Apagar
 
