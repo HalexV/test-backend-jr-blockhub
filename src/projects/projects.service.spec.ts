@@ -372,4 +372,14 @@ describe('ProjectsService', () => {
       );
     });
   });
+
+  describe('findOne', () => {
+    it('should list a project', async () => {
+      const expected = VALID_PROJECT;
+
+      const result = await projectService.findOne('any_id');
+
+      expect(result).toMatchObject(expected);
+    });
+  });
 });
