@@ -40,8 +40,18 @@ export class ProjectsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.projectsService.findOne(id);
+    } catch (error) {
+      switch (error.name) {
+        case 'NotFoundError':
+          throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+
+        default:
+          throw error;
+      }
+    }
   }
 
   @Patch(':id')
