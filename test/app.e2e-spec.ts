@@ -534,5 +534,32 @@ describe('AppController (e2e)', () => {
         expect(response.body).toMatchObject(expected);
       });
     });
+
+    describe('/projects/:id (GET)', () => {
+      it('should return 200 when listing a project', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        const id = response.body._id;
+
+        const expected = {
+          name: 'test',
+          description: 'test description',
+          startDate: new Date('2022-02-22').toISOString(),
+          active: true,
+        };
+
+        response = await request(httpServer).get(`/projects/${id}`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject(expected);
+      });
+    });
   });
 });
