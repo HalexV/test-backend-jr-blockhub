@@ -47,6 +47,10 @@ class ProjectsMongoRepositoryStub {
   async findById() {
     return VALID_PROJECT;
   }
+
+  async findAll() {
+    return [VALID_PROJECT];
+  }
 }
 
 describe('ProjectsService', () => {
@@ -398,6 +402,16 @@ describe('ProjectsService', () => {
       const result = projectService.findOne('any_id');
 
       await expect(result).rejects.toThrowError();
+    });
+  });
+
+  describe('findAll', () => {
+    it('should list an array of projects', async () => {
+      const expected = [VALID_PROJECT];
+
+      const result = await projectService.findAll();
+
+      expect(result).toStrictEqual(expected);
     });
   });
 });
