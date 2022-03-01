@@ -39,8 +39,8 @@ export class ProjectsService {
     return await this.projectsRepository.create(createProjectDto);
   }
 
-  findAll() {
-    return `This action returns all projects`;
+  async findAll() {
+    return await this.projectsRepository.findAll();
   }
 
   async findOne(id: string) {

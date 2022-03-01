@@ -7,4 +7,5 @@ export interface IProjectsRepository {
   update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project>;
   findOneByName(name: string): Promise<Project>;
   findById(id: string): Promise<Project>;
+  findAll(): Promise<Project[]>;
 }

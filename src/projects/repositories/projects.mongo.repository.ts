@@ -45,4 +45,8 @@ export class ProjectsMongoRepository implements IProjectsRepository {
       return null;
     }
   }
+
+  async findAll(): Promise<Project[]> {
+    return await this.projectModel.find({});
+  }
 }
