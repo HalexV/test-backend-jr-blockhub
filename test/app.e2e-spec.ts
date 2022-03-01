@@ -570,5 +570,24 @@ describe('AppController (e2e)', () => {
         expect(response.body.message).toEqual('Project not found');
       });
     });
+
+    describe('/projects (GET)', () => {
+      it('should return 200 when listing the projects', async () => {
+        let response = await request(httpServer)
+          .post('/projects')
+          .send({
+            name: 'test',
+            description: 'test description',
+            startDate: new Date('2022-02-22').getTime(),
+            active: true,
+          });
+
+        response = await request(httpServer).get(`/projects`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toBe(1);
+      });
+    });
   });
 });
