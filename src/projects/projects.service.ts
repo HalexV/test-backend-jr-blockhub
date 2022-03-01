@@ -44,7 +44,16 @@ export class ProjectsService {
   }
 
   async findOne(id: string) {
-    return await this.projectsRepository.findById(id);
+    const project = await this.projectsRepository.findById(id);
+
+    if (!project) {
+      const error = new Error('Project not found');
+      error.name = 'NotFoundError';
+
+      throw error;
+    }
+
+    return project;
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
