@@ -382,6 +382,14 @@ describe('ProjectsService', () => {
       expect(result).toMatchObject(expected);
     });
 
+    it('should throw when the project does not exist', async () => {
+      jest.spyOn(projectsMongoRepository, 'findById').mockReturnValueOnce(null);
+
+      const result = projectService.findOne('invalid_id');
+
+      await expect(result).rejects.toThrowError('Project not found');
+    });
+
     it('should throw if findById throws', async () => {
       jest
         .spyOn(projectsMongoRepository, 'findById')
