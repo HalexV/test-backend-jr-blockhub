@@ -43,8 +43,8 @@ export class ProjectsService {
     return `This action returns all projects`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async findOne(id: string) {
+    return await this.projectsRepository.findById(id);
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
