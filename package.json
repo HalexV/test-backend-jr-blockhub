@@ -20,7 +20,8 @@
     "test:cov": "jest --coverage",
     "test:staged": "yarn test --passWithNoTests --silent --noStackTrace --runInBand --findRelatedTests",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --watch -c ./test/jest-e2e.json"
+    "test:e2e": "jest --watch -c ./test/jest-e2e.json",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -67,8 +68,14 @@
       "ts"
     ],
     "rootDir": ".",
-    "roots": ["<rootDir>/src/", "<rootDir>/test/"],
-    "testRegex": [".spec.ts$",".e2e-spec.ts$"],
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/test/"
+    ],
+    "testRegex": [
+      ".spec.ts$",
+      ".e2e-spec.ts$"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
