@@ -381,5 +381,15 @@ describe('ProjectsService', () => {
 
       expect(result).toMatchObject(expected);
     });
+
+    it('should throw if findById throws', async () => {
+      jest
+        .spyOn(projectsMongoRepository, 'findById')
+        .mockRejectedValueOnce(new Error());
+
+      const result = projectService.findOne('any_id');
+
+      await expect(result).rejects.toThrowError();
+    });
   });
 });
