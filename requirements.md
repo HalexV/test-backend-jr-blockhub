@@ -27,11 +27,11 @@
 
 ### Listar um
 
-- [] Feito
+- [x] Feito
 
 ### Listar vários
 
-- [] Feito
+- [x] Feito
 
 ---
 
