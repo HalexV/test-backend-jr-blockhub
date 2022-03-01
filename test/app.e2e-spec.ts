@@ -588,6 +588,14 @@ describe('AppController (e2e)', () => {
         expect(response.body).toBeInstanceOf(Array);
         expect(response.body.length).toBe(1);
       });
+
+      it('should return 200 when projects do not exist', async () => {
+        const response = await request(httpServer).get(`/projects`);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toBe(0);
+      });
     });
   });
 });
