@@ -413,5 +413,15 @@ describe('ProjectsService', () => {
 
       expect(result).toStrictEqual(expected);
     });
+
+    it('should throw if findAll throws', async () => {
+      jest
+        .spyOn(projectsMongoRepository, 'findAll')
+        .mockRejectedValueOnce(new Error());
+
+      const result = projectService.findAll();
+
+      await expect(result).rejects.toThrowError();
+    });
   });
 });
