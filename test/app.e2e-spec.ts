@@ -560,6 +560,15 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(expected);
       });
+
+      it('should return 404 when the project does not exist', async () => {
+        const id = 'invalid_id';
+
+        const response = await request(httpServer).get(`/projects/${id}`);
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toEqual('Project not found');
+      });
     });
   });
 });
