@@ -647,5 +647,32 @@ describe('AppController (e2e)', () => {
         expect(response.body.message).toBe('Employee already exists');
       });
     });
+
+    describe('/employees/all (GET)', () => {
+      it('should return 200 when listing the employees', async () => {
+        await dbConnection.collection('employees').insertOne({
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        const partialExpected = [
+          {
+            name: 'test',
+            post: 'tester',
+            admission: new Date('2022-02-22').toISOString(),
+            active: true,
+            projects: [],
+          },
+        ];
+
+        const response = await request(httpServer).get('/employees/all');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject(partialExpected);
+      });
+    });
   });
 });
