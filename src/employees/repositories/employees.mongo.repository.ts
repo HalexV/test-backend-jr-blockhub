@@ -15,10 +15,8 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   update(id: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
     throw new Error('Method not implemented.');
   }
-  findOneByName(name: string): Promise<Employee> {
-    throw new Error('Method not implemented.');
-  }
-  findById(id: string): Promise<Employee> {
+
+  findById(id: string): Promise<Employee> | undefined {
     throw new Error('Method not implemented.');
   }
   findAll(): Promise<Employee[]> {
@@ -28,6 +26,10 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   async create(employee: CreateEmployeeDto): Promise<Employee> {
     const newEmployee = await new this.employeeModel(employee);
     return await newEmployee.save();
+  }
+
+  async findOneByName(name: string): Promise<Employee> | undefined {
+    return await this.employeeModel.findOne({ name: { $regex: /`${name}`/i } });
   }
 
   // async update(
