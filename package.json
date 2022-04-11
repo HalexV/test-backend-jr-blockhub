@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:staged": "yarn test --passWithNoTests --silent --noStackTrace --runInBand --findRelatedTests",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --watch -c ./test/jest-e2e.json",
+    "test:e2e": "jest --watch --verbose -c ./test/jest-e2e.json",
     "prepare": "husky install",
     "dev:docker": "docker-compose up -d --build"
   },
