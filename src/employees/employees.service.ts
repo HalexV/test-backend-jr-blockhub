@@ -25,4 +25,8 @@ export class EmployeesService {
 
     return this.employeesRepository.create(createEmployeeDto);
   }
+
+  async findAll(): Promise<Employee[]> {
+    return this.employeesRepository.findAll();
+  }
 }
