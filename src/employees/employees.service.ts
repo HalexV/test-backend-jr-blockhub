@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ValidationError } from '../errors';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.schema';
@@ -13,7 +14,15 @@ export class EmployeesService {
   ) {}
 
   async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
-    const employee = this.employeesRepository.create(createEmployeeDto);
-    return employee;
+    const { name } = createEmployeeDto;
+
+    const employeeAlreadyExists = await this.employeesRepository.findOneByName(
+      name,
+    );
+
+    if (employeeAlreadyExists)
+      throw new ValidationError('Employee already exists');
+
+    return this.employeesRepository.create(createEmployeeDto);
   }
 }
