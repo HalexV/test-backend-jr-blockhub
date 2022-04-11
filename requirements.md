@@ -51,7 +51,7 @@
 
 - Qualquer um dos dados podem ser atualizados
 
-- [x] Feito
+- [] Feito
 
 ## Apagar
 
@@ -67,7 +67,7 @@
 
 ### Listar um
 
-- [x] Feito
+- [] Feito
 
 ### Listar vários
 
