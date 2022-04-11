@@ -29,7 +29,9 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   }
 
   async findOneByName(name: string): Promise<Employee> | undefined {
-    return await this.employeeModel.findOne({ name: { $regex: /`${name}`/i } });
+    return await this.employeeModel.findOne({
+      name: { $regex: `^${name}$`, $options: 'i' },
+    });
   }
 
   // async update(
