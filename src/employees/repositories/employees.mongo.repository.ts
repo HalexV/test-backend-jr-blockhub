@@ -8,10 +8,22 @@ import { Employee, EmployeeDocument } from '../entities/employee.schema';
 import { IEmployeesRepository } from './interface.employees.repository';
 
 @Injectable()
-export class EmployeesMongoRepository /*implements IEmployeesRepository*/ {
+export class EmployeesMongoRepository implements IEmployeesRepository {
   constructor(
     @InjectModel(Employee.name) private employeeModel: Model<EmployeeDocument>,
   ) {}
+  update(id: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+    throw new Error('Method not implemented.');
+  }
+  findOneByName(name: string): Promise<Employee> {
+    throw new Error('Method not implemented.');
+  }
+  findById(id: string): Promise<Employee> {
+    throw new Error('Method not implemented.');
+  }
+  findAll(): Promise<Employee[]> {
+    throw new Error('Method not implemented.');
+  }
 
   async create(employee: CreateEmployeeDto): Promise<Employee> {
     const newEmployee = await new this.employeeModel(employee);
