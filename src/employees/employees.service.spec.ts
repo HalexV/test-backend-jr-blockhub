@@ -27,6 +27,10 @@ class EmployeesMongoRepositoryStub {
   async create() {
     return CONSTANTS.VALID_EMPLOYEE;
   }
+
+  async findOneByName() {
+    return CONSTANTS.VALID_EMPLOYEE;
+  }
 }
 
 describe('EmployeesService', () => {
@@ -73,11 +77,29 @@ describe('EmployeesService', () => {
         employeesMongoRepository,
         'create',
       );
+      const repositoryFindOneByNameSpy = jest
+        .spyOn(employeesMongoRepository, 'findOneByName')
+        .mockResolvedValueOnce(undefined);
 
       const result = await employeeService.create(createEmployeeDto);
 
       expect(result).toEqual(expected);
+      expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
+        createEmployeeDto.name,
+      );
       expect(repositoryCreateSpy).toHaveBeenCalledWith(createEmployeeDto);
+    });
+
+    it('should throw when an employee already exists', async () => {
+      const createEmployeeDto = {
+        name: 'test',
+        post: 'tester',
+        admission: new Date('2020-01-01'),
+      };
+
+      const result = employeeService.create(createEmployeeDto);
+
+      await expect(result).rejects.toThrowError('Employee already exists');
     });
   });
 
