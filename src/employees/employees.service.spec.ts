@@ -140,7 +140,7 @@ describe('EmployeesService', () => {
   });
 
   describe('findAll', () => {
-    test('should call repository findAll when findAll is called', async () => {
+    it('should call repository findAll when it is called', async () => {
       const expected = [CONSTANTS.VALID_EMPLOYEE];
 
       const repositoryFindAllSpy = jest.spyOn(
@@ -152,6 +152,16 @@ describe('EmployeesService', () => {
 
       expect(result).toStrictEqual(expected);
       expect(repositoryFindAllSpy).toHaveBeenCalled();
+    });
+
+    it('should throw when findAll throws', async () => {
+      const repositoryFindAllSpy = jest
+        .spyOn(employeesMongoRepository, 'findAll')
+        .mockRejectedValueOnce(new Error());
+
+      const result = employeeService.findAll();
+
+      await expect(result).rejects.toThrow();
     });
   });
 });
