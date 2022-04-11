@@ -9,28 +9,11 @@ import { IEmployeesRepository } from './repositories/interface.employees.reposit
 export class EmployeesService {
   constructor(
     @Inject(EmployeesMongoRepository)
-    private readonly projectsRepository: IEmployeesRepository,
+    private readonly employeesRepository: IEmployeesRepository,
   ) {}
 
-  // async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
-  //   const employee = new this.employeeModel(createEmployeeDto);
-  //   return await employee.save();
-  // }
-
-  // async update(
-  //   id: string,
-  //   updateEmployeeDto: UpdateEmployeeDto,
-  // ): Promise<Employee> {
-  //   return await this.employeeModel.findByIdAndUpdate(id, updateEmployeeDto, {
-  //     returnDocument: 'after',
-  //   });
-  // }
-
-  // async findOne(id: string): Promise<Employee> {
-  //   return await this.employeeModel.findById(id);
-  // }
-
-  // async findAll(): Promise<Employee[]> {
-  //   return await this.employeeModel.find();
-  // }
+  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
+    const employee = this.employeesRepository.create(createEmployeeDto);
+    return employee;
+  }
 }
