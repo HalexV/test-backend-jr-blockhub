@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeesService } from './employees.service';
+import { Employee } from './entities/employee.schema';
 import { EmployeesMongoRepository } from './repositories/employees.mongo.repository';
 
 class EmployeeModelStub {
@@ -30,6 +32,10 @@ class EmployeesMongoRepositoryStub {
 
   async findOneByName() {
     return CONSTANTS.VALID_EMPLOYEE;
+  }
+
+  async findAll() {
+    return [CONSTANTS.VALID_EMPLOYEE];
   }
 }
 
@@ -131,5 +137,21 @@ describe('EmployeesService', () => {
     //     },
     //   );
     // });
+  });
+
+  describe('findAll', () => {
+    test('should call repository findAll when findAll is called', async () => {
+      const expected = [CONSTANTS.VALID_EMPLOYEE];
+
+      const repositoryFindAllSpy = jest.spyOn(
+        employeesMongoRepository,
+        'findAll',
+      );
+
+      const result = await employeeService.findAll();
+
+      expect(result).toStrictEqual(expected);
+      expect(repositoryFindAllSpy).toHaveBeenCalled();
+    });
   });
 });
