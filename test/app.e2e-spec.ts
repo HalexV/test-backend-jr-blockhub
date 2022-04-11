@@ -625,6 +625,27 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(201);
         expect(response.body).toMatchObject(partialExpected);
       });
+
+      it('should return 400 when employee already exists', async () => {
+        await dbConnection.collection('employees').insertOne({
+          name: 'test',
+          post: 'any',
+          admission: '2022-02-02',
+        });
+
+        const inputPayload = {
+          name: 'test',
+          post: 'tester',
+          admission: '2022-02-22',
+        };
+
+        const response = await request(httpServer)
+          .post('/employees')
+          .send(inputPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('Employee already exists');
+      });
     });
   });
 });
