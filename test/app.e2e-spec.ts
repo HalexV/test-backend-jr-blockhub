@@ -25,10 +25,12 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     await dbConnection.collection('projects').deleteMany({});
+    await dbConnection.collection('employees').deleteMany({});
   });
 
   afterAll(async () => {
     await dbConnection.collection('projects').deleteMany({});
+    await dbConnection.collection('employees').deleteMany({});
     await app.close();
   });
 
@@ -595,6 +597,33 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(200);
         expect(response.body).toBeInstanceOf(Array);
         expect(response.body.length).toBe(0);
+      });
+    });
+  });
+
+  describe('Employees Resource', () => {
+    describe('/employees (POST)', () => {
+      it('should return 201 when creating with valid data', async () => {
+        const inputPayload = {
+          name: 'test',
+          post: 'tester',
+          admission: '2022-02-22',
+        };
+
+        const partialExpected = {
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        };
+
+        const response = await request(httpServer)
+          .post('/employees')
+          .send(inputPayload);
+
+        expect(response.status).toBe(201);
+        expect(response.body).toMatchObject(partialExpected);
       });
     });
   });
