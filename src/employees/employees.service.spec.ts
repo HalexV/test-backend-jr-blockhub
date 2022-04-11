@@ -1,24 +1,8 @@
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Model } from 'mongoose';
 import { EmployeesService } from './employees.service';
-import { Employee, EmployeeDocument } from './entities/employee.schema';
 import { EmployeesMongoRepository } from './repositories/employees.mongo.repository';
 
-let employeeModelConstructorArgs;
 class EmployeeModelStub {
-  constructor(private data) {
-    employeeModelConstructorArgs = data;
-  }
-  async save() {
-    return {
-      name: 'test',
-      post: 'tester',
-      admission: new Date('2020-01-01'),
-      active: true,
-    };
-  }
-
   static async findByIdAndUpdate() {
     return {
       name: 'test1',
@@ -29,7 +13,21 @@ class EmployeeModelStub {
   }
 }
 
-class EmployeesMongoRepositoryStub {}
+const CONSTANTS = {
+  VALID_EMPLOYEE: {
+    name: 'test',
+    post: 'tester',
+    admission: new Date('2020-01-01'),
+    active: true,
+    projects: [],
+  },
+};
+
+class EmployeesMongoRepositoryStub {
+  async create() {
+    return CONSTANTS.VALID_EMPLOYEE;
+  }
+}
 
 describe('EmployeesService', () => {
   let employeeService: EmployeesService;
@@ -50,8 +48,6 @@ describe('EmployeesService', () => {
     employeesMongoRepository = module.get<EmployeesMongoRepository>(
       EmployeesMongoRepository,
     );
-
-    employeeModelConstructorArgs = null;
   });
 
   afterEach(() => {
@@ -63,77 +59,55 @@ describe('EmployeesService', () => {
     expect(employeesMongoRepository).toBeDefined();
   });
 
-  // describe('create', () => {
-  //   it('should be able to create an employee', async () => {
-  //     jest.useFakeTimers('modern').setSystemTime(new Date('2020-01-01'));
-  //     const saveSpy = jest.spyOn(employeeModel.prototype, 'save');
+  describe('create', () => {
+    it('should be able to create an employee', async () => {
+      const expected = CONSTANTS.VALID_EMPLOYEE;
 
-  //     const expected = {
-  //       name: 'test',
-  //       post: 'tester',
-  //       admission: new Date('2020-01-01'),
-  //       active: true,
-  //     };
+      const createEmployeeDto = {
+        name: 'test',
+        post: 'tester',
+        admission: new Date('2020-01-01'),
+      };
 
-  //     const createEmployeeDto = {
-  //       name: 'test',
-  //       post: 'tester',
-  //     };
+      const repositoryCreateSpy = jest.spyOn(
+        employeesMongoRepository,
+        'create',
+      );
 
-  //     const result = await employeeService.create(createEmployeeDto);
+      const result = await employeeService.create(createEmployeeDto);
 
-  //     expect(result).toEqual(expected);
-  //     expect(employeeModelConstructorArgs).toEqual(createEmployeeDto);
-  //     expect(saveSpy).toHaveBeenCalledTimes(1);
-  //   });
+      expect(result).toEqual(expected);
+      expect(repositoryCreateSpy).toHaveBeenCalledWith(createEmployeeDto);
+    });
+  });
 
-  //   it('should throw when save throws', async () => {
-  //     jest
-  //       .spyOn(employeeModel.prototype, 'save')
-  //       .mockRejectedValueOnce(new Error());
-
-  //     const createEmployeeDto = {
-  //       name: 'test',
-  //       post: 'tester',
-  //     };
-
-  //     const result = employeeService.create(createEmployeeDto);
-
-  //     await expect(result).rejects.toThrowError();
-  //   });
-  // });
-
-  // describe('Update', () => {
-  //   it('should be able to update an employee', async () => {
-  //     const findByIdAndUpdateSpy = jest.spyOn(
-  //       employeeModel,
-  //       'findByIdAndUpdate',
-  //     );
-
-  //     const updateEmployeeDto = {
-  //       name: 'test1',
-  //       post: 'tester1',
-  //       admission: new Date('2020-01-02'),
-  //       active: false,
-  //     };
-
-  //     const employeeUpdated = {
-  //       name: 'test1',
-  //       post: 'tester1',
-  //       admission: new Date('2020-01-02'),
-  //       active: false,
-  //     };
-
-  //     const result = await employeeService.update('any', updateEmployeeDto);
-
-  //     expect(result).toEqual(employeeUpdated);
-  //     expect(findByIdAndUpdateSpy).toHaveBeenCalledWith(
-  //       'any',
-  //       updateEmployeeDto,
-  //       {
-  //         returnDocument: 'after',
-  //       },
-  //     );
-  //   });
-  // });
+  describe('Update', () => {
+    // it('should be able to update an employee', async () => {
+    //   const findByIdAndUpdateSpy = jest.spyOn(
+    //     employeeModel,
+    //     'findByIdAndUpdate',
+    //   );
+    //   const updateEmployeeDto = {
+    //     name: 'test1',
+    //     post: 'tester1',
+    //     admission: new Date('2020-01-02'),
+    //     active: false,
+    //   };
+    //   const employeeUpdated = {
+    //     name: 'test1',
+    //     post: 'tester1',
+    //     admission: new Date('2020-01-02'),
+    //     active: false,
+    //   };
+    //   const result = await employeeService.update('any', updateEmployeeDto);
+    //   expect(result).toEqual(employeeUpdated);
+    //   expect(findByIdAndUpdateSpy).toHaveBeenCalledWith(
+    //     'any',
+    //     updateEmployeeDto,
+    //     {
+    //       returnDocument: 'after',
+    //     },
+    //   );
+    // });
+  });
 });
