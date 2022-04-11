@@ -16,18 +16,18 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
-  // @Post()
-  // async create(@Body() createEmployeeDto: CreateEmployeeDto) {
-  //   try {
-  //     return await this.employeesService.create(createEmployeeDto);
-  //   } catch (error) {
-  //     if (error.name === 'ValidationError') {
-  //       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  //     }
+  @Post()
+  async create(@Body() createEmployeeDto: CreateEmployeeDto) {
+    try {
+      return await this.employeesService.create(createEmployeeDto);
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
 
-  //     throw error;
-  //   }
-  // }
+      throw error;
+    }
+  }
 
   // @Patch(':id')
   // async update(
