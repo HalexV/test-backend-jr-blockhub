@@ -45,14 +45,14 @@ export class EmployeesController {
   //   }
   // }
 
-  // @Get('all')
-  // async listEmployees() {
-  //   try {
-  //     return await this.employeesService.findAll();
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  @Get('all')
+  async listEmployees() {
+    try {
+      return await this.employeesService.findAll();
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // @Get(':id')
   // async listEmployee(@Param('id') id: string) {
