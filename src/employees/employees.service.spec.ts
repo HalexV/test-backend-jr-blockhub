@@ -144,6 +144,10 @@ describe('EmployeesService', () => {
 
       const id = 'any';
 
+      const repositoryFindOneByNameSpy = jest
+        .spyOn(employeesMongoRepository, 'findOneByName')
+        .mockReturnValueOnce(undefined);
+
       const repositoryUpdateSpy = jest.spyOn(
         employeesMongoRepository,
         'update',
@@ -153,6 +157,29 @@ describe('EmployeesService', () => {
 
       expect(result).toStrictEqual(expected);
       expect(repositoryUpdateSpy).toHaveBeenCalledWith(id, updateEmployeeDto);
+      expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
+        updateEmployeeDto.name,
+      );
+    });
+
+    it('should throw when name already exists', async () => {
+      const updateEmployeeDto = {
+        name: 'test',
+      };
+
+      const id = 'any';
+
+      const repositoryFindOneByNameSpy = jest.spyOn(
+        employeesMongoRepository,
+        'findOneByName',
+      );
+
+      const result = employeeService.update(id, updateEmployeeDto);
+
+      await expect(result).rejects.toThrowError('Name already exists');
+      expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
+        updateEmployeeDto.name,
+      );
     });
   });
 
