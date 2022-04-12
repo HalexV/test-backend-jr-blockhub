@@ -37,6 +37,10 @@ class EmployeesMongoRepositoryStub {
   async findAll() {
     return [CONSTANTS.VALID_EMPLOYEE];
   }
+
+  async findById() {
+    return CONSTANTS.VALID_EMPLOYEE;
+  }
 }
 
 describe('EmployeesService', () => {
@@ -162,6 +166,24 @@ describe('EmployeesService', () => {
       const result = employeeService.findAll();
 
       await expect(result).rejects.toThrow();
+    });
+  });
+
+  describe('findOne', () => {
+    it('should call repository findById when it is called', async () => {
+      const expected = CONSTANTS.VALID_EMPLOYEE;
+
+      const repositoryFindByIdSpy = jest.spyOn(
+        employeesMongoRepository,
+        'findById',
+      );
+
+      const id = 'any';
+
+      const result = await employeeService.findOne(id);
+
+      expect(result).toStrictEqual(expected);
+      expect(repositoryFindByIdSpy).toHaveBeenCalledWith(id);
     });
   });
 });
