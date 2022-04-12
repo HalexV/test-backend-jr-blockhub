@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ValidationError } from '../errors';
+import { ValidationError, NotFoundError } from '../errors';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.schema';
@@ -31,6 +31,10 @@ export class EmployeesService {
   }
 
   async findOne(id: string): Promise<Employee> {
-    return this.employeesRepository.findById(id);
+    const employee = await this.employeesRepository.findById(id);
+
+    if (!employee) throw new NotFoundError('Employee not found');
+
+    return employee;
   }
 }
