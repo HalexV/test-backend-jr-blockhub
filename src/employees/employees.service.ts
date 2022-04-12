@@ -30,6 +30,16 @@ export class EmployeesService {
     id: string,
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
+    const { name } = updateEmployeeDto;
+
+    if (name) {
+      const employeeAlreadyExists =
+        await this.employeesRepository.findOneByName(name);
+
+      if (employeeAlreadyExists)
+        throw new ValidationError('Name already exists');
+    }
+
     return await this.employeesRepository.update(id, updateEmployeeDto);
   }
 
