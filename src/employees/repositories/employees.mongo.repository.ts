@@ -16,10 +16,6 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
     throw new Error('Method not implemented.');
   }
 
-  findById(id: string): Promise<Employee> | undefined {
-    throw new Error('Method not implemented.');
-  }
-
   async create(employee: CreateEmployeeDto): Promise<Employee> {
     const newEmployee = await new this.employeeModel(employee);
     return await newEmployee.save();
@@ -33,6 +29,18 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
 
   async findAll(): Promise<Employee[]> {
     return await this.employeeModel.find({});
+  }
+
+  async findById(id: string): Promise<Employee> | undefined {
+    try {
+      const employee = await this.employeeModel.findById(id);
+
+      if (!employee) return null;
+
+      return employee.toObject();
+    } catch (error) {
+      return null;
+    }
   }
 
   // async update(
@@ -50,17 +58,5 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   //   if (!project) return null;
 
   //   return project.toObject();
-  // }
-
-  // async findById(id: string): Promise<Project> {
-  //   try {
-  //     const project = await this.projectModel.findById(id);
-
-  //     if (!project) return null;
-
-  //     return project.toObject();
-  //   } catch (error) {
-  //     return null;
-  //   }
   // }
 }
