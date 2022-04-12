@@ -185,5 +185,18 @@ describe('EmployeesService', () => {
       expect(result).toStrictEqual(expected);
       expect(repositoryFindByIdSpy).toHaveBeenCalledWith(id);
     });
+
+    it('should throw when the employee is not found', async () => {
+      const repositoryFindByIdSpy = jest
+        .spyOn(employeesMongoRepository, 'findById')
+        .mockResolvedValueOnce(undefined);
+
+      const id = 'any';
+
+      const result = employeeService.findOne(id);
+
+      expect(repositoryFindByIdSpy).toHaveBeenCalledWith(id);
+      await expect(result).rejects.toThrowError('Employee not found');
+    });
   });
 });
