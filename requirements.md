@@ -19,7 +19,7 @@
 
 ## Apagar
 
-- Verificar o documento de relacionamento
+- Verificar se existem colaboradores registrados nesse projeto. Se houverem, o projeto não poderá ser apagado.
 
 - [] Feito
 
@@ -44,23 +44,21 @@
 - [x] Feito
 
 ## Cadastrar em um projeto
-
+- Será feito na rota de patch update
 - [] Feito
 
 ## Atualizar
-
+- Será feito na rota de patch update
 - Qualquer um dos dados podem ser atualizados
 
 - [] Feito
 
-## Apagar
-
-- Verificar o documento de relacionamento 
+## Apagar 
 
 - [] Feito
 
 ## Remover de um projeto
-
+- Será feito na rota de patch update
 - [] Feito
 
 ## Listar
