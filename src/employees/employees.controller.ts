@@ -59,6 +59,10 @@ export class EmployeesController {
     try {
       return await this.employeesService.findOne(id);
     } catch (error) {
+      if (error.name === 'NotFoundError') {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+
       throw error;
     }
   }
