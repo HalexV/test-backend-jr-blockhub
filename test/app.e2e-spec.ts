@@ -700,6 +700,23 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(partialExpected);
       });
+
+      it('should return 404 when employee is not found', async () => {
+        await dbConnection.collection('employees').insertOne({
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        const response = await request(httpServer).get(
+          '/employees/000000000000000000000001',
+        );
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toStrictEqual('Employee not found');
+      });
     });
   });
 });
