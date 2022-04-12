@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { Connection } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { DatabaseService } from './../src/database/database.service';
 
 describe('AppController (e2e)', () => {
@@ -669,6 +669,33 @@ describe('AppController (e2e)', () => {
         ];
 
         const response = await request(httpServer).get('/employees/all');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject(partialExpected);
+      });
+    });
+
+    describe('/employees/:id (GET)', () => {
+      it('should return 200 when listing the employee', async () => {
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId('000000000000000000000001'),
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        const partialExpected = {
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        };
+        const response = await request(httpServer).get(
+          '/employees/000000000000000000000001',
+        );
 
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(partialExpected);
