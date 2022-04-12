@@ -12,13 +12,19 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   constructor(
     @InjectModel(Employee.name) private employeeModel: Model<EmployeeDocument>,
   ) {}
-  update(id: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
-    throw new Error('Method not implemented.');
-  }
 
   async create(employee: CreateEmployeeDto): Promise<Employee> {
     const newEmployee = await new this.employeeModel(employee);
     return await newEmployee.save();
+  }
+
+  async update(
+    id: string,
+    updateEmployeeDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
+    return await this.employeeModel.findByIdAndUpdate(id, updateEmployeeDto, {
+      returnDocument: 'after',
+    });
   }
 
   async findOneByName(name: string): Promise<Employee> | undefined {
@@ -42,21 +48,4 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
       return null;
     }
   }
-
-  // async update(
-  //   id: string,
-  //   updateProjectDto: UpdateProjectDto,
-  // ): Promise<Project> {
-  //   return await this.projectModel.findByIdAndUpdate(id, updateProjectDto, {
-  //     returnDocument: 'after',
-  //   });
-  // }
-
-  // async findOneByName(name: string): Promise<Project> {
-  //   const project = await this.projectModel.findOne({ name });
-
-  //   if (!project) return null;
-
-  //   return project.toObject();
-  // }
 }
