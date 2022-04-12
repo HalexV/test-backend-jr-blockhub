@@ -29,4 +29,8 @@ export class EmployeesService {
   async findAll(): Promise<Employee[]> {
     return this.employeesRepository.findAll();
   }
+
+  async findOne(id: string): Promise<Employee> {
+    return this.employeesRepository.findById(id);
+  }
 }
