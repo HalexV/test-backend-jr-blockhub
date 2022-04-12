@@ -23,7 +23,14 @@ export class EmployeesService {
     if (employeeAlreadyExists)
       throw new ValidationError('Employee already exists');
 
-    return this.employeesRepository.create(createEmployeeDto);
+    return await this.employeesRepository.create(createEmployeeDto);
+  }
+
+  async update(
+    id: string,
+    updateEmployeeDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
+    return await this.employeesRepository.update(id, updateEmployeeDto);
   }
 
   async findAll(): Promise<Employee[]> {
