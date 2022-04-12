@@ -23,11 +23,22 @@ const CONSTANTS = {
     active: true,
     projects: [],
   },
+  VALID_UPDATED_EMPLOYEE: {
+    name: 'new test',
+    post: 'new tester',
+    admission: new Date('2020-01-20'),
+    active: false,
+    projects: ['any_id', 'any_id'],
+  },
 };
 
 class EmployeesMongoRepositoryStub {
   async create() {
     return CONSTANTS.VALID_EMPLOYEE;
+  }
+
+  async update() {
+    return CONSTANTS.VALID_UPDATED_EMPLOYEE;
   }
 
   async findOneByName() {
@@ -114,33 +125,35 @@ describe('EmployeesService', () => {
   });
 
   describe('Update', () => {
-    // it('should be able to update an employee', async () => {
-    //   const findByIdAndUpdateSpy = jest.spyOn(
-    //     employeeModel,
-    //     'findByIdAndUpdate',
-    //   );
-    //   const updateEmployeeDto = {
-    //     name: 'test1',
-    //     post: 'tester1',
-    //     admission: new Date('2020-01-02'),
-    //     active: false,
-    //   };
-    //   const employeeUpdated = {
-    //     name: 'test1',
-    //     post: 'tester1',
-    //     admission: new Date('2020-01-02'),
-    //     active: false,
-    //   };
-    //   const result = await employeeService.update('any', updateEmployeeDto);
-    //   expect(result).toEqual(employeeUpdated);
-    //   expect(findByIdAndUpdateSpy).toHaveBeenCalledWith(
-    //     'any',
-    //     updateEmployeeDto,
-    //     {
-    //       returnDocument: 'after',
-    //     },
-    //   );
-    // });
+    it('should update an employee when valid data is inserted', async () => {
+      const updateEmployeeDto = {
+        name: 'new test',
+        post: 'new tester',
+        admission: new Date('2020-01-20'),
+        active: false,
+        projects: ['any_id', 'any_id'],
+      };
+
+      const expected = {
+        name: 'new test',
+        post: 'new tester',
+        admission: new Date('2020-01-20'),
+        active: false,
+        projects: ['any_id', 'any_id'],
+      };
+
+      const id = 'any';
+
+      const repositoryUpdateSpy = jest.spyOn(
+        employeesMongoRepository,
+        'update',
+      );
+
+      const result = await employeeService.update(id, updateEmployeeDto);
+
+      expect(result).toStrictEqual(expected);
+      expect(repositoryUpdateSpy).toHaveBeenCalledWith(id, updateEmployeeDto);
+    });
   });
 
   describe('findAll', () => {
