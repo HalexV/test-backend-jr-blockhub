@@ -198,5 +198,18 @@ describe('EmployeesService', () => {
       expect(repositoryFindByIdSpy).toHaveBeenCalledWith(id);
       await expect(result).rejects.toThrowError('Employee not found');
     });
+
+    it('should throw when findById throws', async () => {
+      const repositoryFindByIdSpy = jest
+        .spyOn(employeesMongoRepository, 'findById')
+        .mockRejectedValueOnce(new Error());
+
+      const id = 'any';
+
+      const result = employeeService.findOne(id);
+
+      expect(repositoryFindByIdSpy).toHaveBeenCalledWith(id);
+      await expect(result).rejects.toThrow();
+    });
   });
 });
