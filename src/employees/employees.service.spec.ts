@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundError } from '../errors';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.schema';
@@ -180,6 +181,31 @@ describe('EmployeesService', () => {
       expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
         updateEmployeeDto.name,
       );
+    });
+
+    it('should throw when an employee is not found', async () => {
+      const updateEmployeeDto = {
+        name: 'new test',
+        post: 'new tester',
+        admission: new Date('2020-01-20'),
+        active: false,
+        projects: ['any_id', 'any_id'],
+      };
+
+      const id = 'invalid';
+
+      jest
+        .spyOn(employeesMongoRepository, 'findOneByName')
+        .mockReturnValueOnce(undefined);
+
+      jest
+        .spyOn(employeesMongoRepository, 'update')
+        .mockResolvedValueOnce(null);
+
+      const result = employeeService.update(id, updateEmployeeDto);
+
+      await expect(result).rejects.toThrow('Employee not found');
+      await expect(result).rejects.toBeInstanceOf(NotFoundError);
     });
   });
 
