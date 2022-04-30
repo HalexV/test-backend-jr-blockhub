@@ -40,7 +40,14 @@ export class EmployeesService {
         throw new ValidationError('Name already exists');
     }
 
-    return await this.employeesRepository.update(id, updateEmployeeDto);
+    const employeeUpdated = await this.employeesRepository.update(
+      id,
+      updateEmployeeDto,
+    );
+
+    if (!employeeUpdated) throw new NotFoundError('Employee not found');
+
+    return employeeUpdated;
   }
 
   async findAll(): Promise<Employee[]> {
