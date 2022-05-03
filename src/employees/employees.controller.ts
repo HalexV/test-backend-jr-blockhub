@@ -29,21 +29,28 @@ export class EmployeesController {
     }
   }
 
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() updateEmployeeDto: UpdateEmployeeDto,
-  // ) {
-  //   try {
-  //     return await this.employeesService.update(id, updateEmployeeDto);
-  //   } catch (error) {
-  //     if (error.name === 'ValidationError') {
-  //       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  //     }
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateEmployeeDto: UpdateEmployeeDto,
+  ) {
+    try {
+      const { name, post, admission, active, projects } = updateEmployeeDto;
+      return await this.employeesService.update(id, {
+        name,
+        post,
+        admission,
+        active,
+        projects,
+      });
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
 
-  //     throw error;
-  //   }
-  // }
+      throw error;
+    }
+  }
 
   @Get('all')
   async listEmployees() {
