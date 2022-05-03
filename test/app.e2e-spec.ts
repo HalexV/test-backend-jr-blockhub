@@ -718,5 +718,48 @@ describe('AppController (e2e)', () => {
         expect(response.body.message).toStrictEqual('Employee not found');
       });
     });
+
+    describe('/employees/:id (PATCH)', () => {
+      it('should return 200 when updating the employee', async () => {
+        await dbConnection.collection('projects').insertOne({
+          _id: new Types.ObjectId('00000000000000000000000a'),
+          name: 'test',
+          description: 'test description',
+          startDate: new Date('2022-02-22').getTime(),
+          active: true,
+        });
+
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId('000000000000000000000001'),
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: ['00000000000000000000000a'],
+        });
+
+        const updateEmployeePayload = {
+          name: 'Carlos Alberto',
+          post: 'Desenvolvedor',
+          admission: new Date('2022-02-23').toISOString(),
+          active: true,
+          projects: [],
+        };
+
+        const partialExpected = {
+          name: 'Carlos Alberto',
+          post: 'Desenvolvedor',
+          admission: new Date('2022-02-23').toISOString(),
+          active: true,
+          projects: [],
+        };
+        const response = await request(httpServer)
+          .patch('/employees/000000000000000000000001')
+          .send(updateEmployeePayload);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject(partialExpected);
+      });
+    });
   });
 });
