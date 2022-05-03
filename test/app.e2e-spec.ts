@@ -760,6 +760,23 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(200);
         expect(response.body).toMatchObject(partialExpected);
       });
+
+      it('should return 404 when the employee is not found', async () => {
+        const updateEmployeePayload = {
+          name: 'Carlos Alberto',
+          post: 'Desenvolvedor',
+          admission: new Date('2022-02-23').toISOString(),
+          active: true,
+          projects: [],
+        };
+
+        const response = await request(httpServer)
+          .patch('/employees/000000000000000000000001')
+          .send(updateEmployeePayload);
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toStrictEqual('Employee not found');
+      });
     });
   });
 });
