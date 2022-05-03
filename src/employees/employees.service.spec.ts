@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ProjectsModule } from '../projects/projects.module';
+import { ProjectsMongoRepository } from '../projects/repositories/projects.mongo.repository';
 import { NotFoundError } from '../errors';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeesService } from './employees.service';
@@ -31,6 +33,13 @@ const CONSTANTS = {
     active: false,
     projects: ['any_id', 'any_id'],
   },
+  VALID_PROJECT: {
+    name: 'test project',
+    description: 'test description',
+    startDate: new Date('2022-01-01'),
+    endDate: new Date('2022-01-02'),
+    active: true,
+  },
 };
 
 class EmployeesMongoRepositoryStub {
@@ -55,9 +64,16 @@ class EmployeesMongoRepositoryStub {
   }
 }
 
+class ProjectsMongoRepositoryStub {
+  async findById() {
+    return CONSTANTS.VALID_PROJECT;
+  }
+}
+
 describe('EmployeesService', () => {
   let employeeService: EmployeesService;
   let employeesMongoRepository: EmployeesMongoRepository;
+  let projectsMongoRepository: ProjectsMongoRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -67,6 +83,10 @@ describe('EmployeesService', () => {
           provide: EmployeesMongoRepository,
           useValue: new EmployeesMongoRepositoryStub(),
         },
+        {
+          provide: ProjectsMongoRepository,
+          useValue: new ProjectsMongoRepositoryStub(),
+        },
       ],
     }).compile();
 
@@ -74,15 +94,20 @@ describe('EmployeesService', () => {
     employeesMongoRepository = module.get<EmployeesMongoRepository>(
       EmployeesMongoRepository,
     );
+    projectsMongoRepository = module.get<ProjectsMongoRepository>(
+      ProjectsMongoRepository,
+    );
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(employeeService).toBeDefined();
     expect(employeesMongoRepository).toBeDefined();
+    expect(projectsMongoRepository).toBeDefined();
   });
 
   describe('create', () => {
@@ -205,6 +230,34 @@ describe('EmployeesService', () => {
       const result = employeeService.update(id, updateEmployeeDto);
 
       await expect(result).rejects.toThrow('Employee not found');
+      await expect(result).rejects.toBeInstanceOf(NotFoundError);
+    });
+
+    it('should throw when a project does not exist', async () => {
+      const updateEmployeeDto = {
+        name: 'new test',
+        post: 'new tester',
+        admission: new Date('2020-01-20'),
+        active: false,
+        projects: ['any_id', 'invalid_id'],
+      };
+
+      const id = 'any_id';
+
+      jest
+        .spyOn(employeesMongoRepository, 'findOneByName')
+        .mockReturnValueOnce(undefined);
+
+      jest
+        .spyOn(projectsMongoRepository, 'findById')
+        .mockImplementation(async (id) => {
+          if (id === 'invalid_id') return null;
+          return CONSTANTS.VALID_PROJECT;
+        });
+
+      const result = employeeService.update(id, updateEmployeeDto);
+
+      await expect(result).rejects.toThrow('Project invalid_id not found');
       await expect(result).rejects.toBeInstanceOf(NotFoundError);
     });
   });
