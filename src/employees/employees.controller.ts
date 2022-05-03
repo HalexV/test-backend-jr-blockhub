@@ -48,6 +48,10 @@ export class EmployeesController {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
 
+      if (error.name === 'NotFoundError') {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+
       throw error;
     }
   }
