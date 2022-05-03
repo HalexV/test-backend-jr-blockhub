@@ -11,5 +11,6 @@ import { ProjectsMongoRepository } from './repositories/projects.mongo.repositor
   ],
   controllers: [ProjectsController],
   providers: [ProjectsService, ProjectsMongoRepository],
+  exports: [ProjectsMongoRepository],
 })
 export class ProjectsModule {}
