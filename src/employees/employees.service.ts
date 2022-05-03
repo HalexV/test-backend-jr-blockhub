@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { IProjectsRepository } from '../projects/repositories/interface.projects.repository';
+import { ProjectsMongoRepository } from '../projects/repositories/projects.mongo.repository';
 import { ValidationError, NotFoundError } from '../errors';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -11,6 +13,8 @@ export class EmployeesService {
   constructor(
     @Inject(EmployeesMongoRepository)
     private readonly employeesRepository: IEmployeesRepository,
+    @Inject(ProjectsMongoRepository)
+    private readonly projectsMongoRepository: IProjectsRepository,
   ) {}
 
   async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
@@ -30,7 +34,7 @@ export class EmployeesService {
     id: string,
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
-    const { name } = updateEmployeeDto;
+    const { name, projects } = updateEmployeeDto;
 
     if (name) {
       const employeeAlreadyExists =
@@ -38,6 +42,16 @@ export class EmployeesService {
 
       if (employeeAlreadyExists)
         throw new ValidationError('Name already exists');
+    }
+
+    if (projects instanceof Array) {
+      let project;
+      for (let index = 0; index < projects.length; index += 1) {
+        project = await this.projectsMongoRepository.findById(projects[index]);
+
+        if (!project)
+          throw new NotFoundError(`Project ${projects[index]} not found`);
+      }
     }
 
     const employeeUpdated = await this.employeesRepository.update(
