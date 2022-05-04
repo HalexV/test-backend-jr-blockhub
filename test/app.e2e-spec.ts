@@ -777,6 +777,41 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(404);
         expect(response.body.message).toStrictEqual('Employee not found');
       });
+
+      it('should return 400 when name already exists with another id', async () => {
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId('000000000000000000000001'),
+          name: 'Test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId('000000000000000000000002'),
+          name: 'Carlos Alberto',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        const updateEmployeePayload = {
+          name: 'carlos Alberto',
+          post: 'Desenvolvedor',
+          admission: new Date('2022-02-23').toISOString(),
+          active: true,
+          projects: [],
+        };
+
+        const response = await request(httpServer)
+          .patch('/employees/000000000000000000000001')
+          .send(updateEmployeePayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toStrictEqual('Name already exists');
+      });
     });
   });
 });
