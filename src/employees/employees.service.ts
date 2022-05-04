@@ -38,13 +38,15 @@ export class EmployeesService {
 
     if (name) {
       const employeeAlreadyExists =
-        await this.employeesRepository.findOneByName(name);
+        (await this.employeesRepository.findOneByName(name)) as Employee & {
+          _id: string;
+        };
 
-      if (employeeAlreadyExists)
+      if (employeeAlreadyExists && employeeAlreadyExists._id !== id)
         throw new ValidationError('Name already exists');
     }
 
-    if (projects instanceof Array) {
+    if (Array.isArray(projects)) {
       let project;
       for (let index = 0; index < projects.length; index += 1) {
         project = await this.projectsMongoRepository.findById(projects[index]);
