@@ -38,11 +38,9 @@ export class EmployeesService {
 
     if (name) {
       const employeeAlreadyExists =
-        (await this.employeesRepository.findOneByName(name)) as Employee & {
-          _id: string;
-        };
+        await this.employeesRepository.findOneByName(name);
 
-      if (employeeAlreadyExists && employeeAlreadyExists._id !== id)
+      if (employeeAlreadyExists && employeeAlreadyExists.id !== id)
         throw new ValidationError('Name already exists');
     }
 
