@@ -20,6 +20,7 @@ class EmployeeModelStub {
 
 const CONSTANTS = {
   VALID_EMPLOYEE: {
+    id: 'any',
     name: 'test',
     post: 'tester',
     admission: new Date('2020-01-01'),
@@ -27,6 +28,7 @@ const CONSTANTS = {
     projects: [],
   },
   VALID_UPDATED_EMPLOYEE: {
+    id: 'any',
     name: 'new test',
     post: 'new tester',
     admission: new Date('2020-01-20'),
@@ -181,19 +183,19 @@ describe('EmployeesService', () => {
 
       const result = await employeeService.update(id, updateEmployeeDto);
 
-      expect(result).toStrictEqual(expected);
+      expect(result).toMatchObject(expected);
       expect(repositoryUpdateSpy).toHaveBeenCalledWith(id, updateEmployeeDto);
       expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
         updateEmployeeDto.name,
       );
     });
 
-    it('should throw when name already exists', async () => {
+    it('should throw when name already exists with another id', async () => {
       const updateEmployeeDto = {
         name: 'test',
       };
 
-      const id = 'any';
+      const id = 'different_id';
 
       const repositoryFindOneByNameSpy = jest.spyOn(
         employeesMongoRepository,
