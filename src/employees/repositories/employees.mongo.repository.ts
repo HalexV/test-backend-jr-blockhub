@@ -6,6 +6,7 @@ import { CreateEmployeeDto } from '../dto/create-employee.dto';
 import { UpdateEmployeeDto } from '../dto/update-employee.dto';
 import { Employee, EmployeeDocument } from '../entities/employee.schema';
 import { IEmployeesRepository } from './interface.employees.repository';
+import MongoHelper from '../../database/utils/mongo/MongoHelper';
 
 @Injectable()
 export class EmployeesMongoRepository implements IEmployeesRepository {
@@ -28,9 +29,13 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   }
 
   async findOneByName(name: string): Promise<Employee> | undefined {
-    return await this.employeeModel.findOne({
+    const docEmployee = await this.employeeModel.findOne({
       name: { $regex: `^${name}$`, $options: 'i' },
     });
+
+    if (!docEmployee) return null;
+
+    return MongoHelper.map(docEmployee.toObject());
   }
 
   async findAll(): Promise<Employee[]> {
