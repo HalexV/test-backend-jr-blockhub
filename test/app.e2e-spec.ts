@@ -812,6 +812,38 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(400);
         expect(response.body.message).toStrictEqual('Name already exists');
       });
+
+      it('should return 404 when a project is not found', async () => {
+        await dbConnection.collection('projects').insertOne({
+          _id: new Types.ObjectId('00000000000000000000000a'),
+          name: 'test',
+          description: 'test description',
+          startDate: new Date('2022-02-22').getTime(),
+          active: true,
+        });
+
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId('000000000000000000000001'),
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: ['00000000000000000000000a'],
+        });
+
+        const updateEmployeePayload = {
+          projects: ['00000000000000000000000a', '00000000000000000000000b'],
+        };
+
+        const response = await request(httpServer)
+          .patch('/employees/000000000000000000000001')
+          .send(updateEmployeePayload);
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toStrictEqual(
+          'Project 00000000000000000000000b not found',
+        );
+      });
     });
   });
 });
