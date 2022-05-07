@@ -7,6 +7,8 @@ export type EmployeeDocument = Employee & Document;
 
 @Schema()
 export class Employee {
+  id: string;
+
   @Prop({
     required: true,
   })
