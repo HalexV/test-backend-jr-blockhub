@@ -3,6 +3,7 @@
 - Nesta versão o controle das datas será simples, ou seja, projetos passados podem ser cadastrados e o campo ativo do projeto deverá ser atualizado manualmente.
 
 ## Cadastrar
+
 - O nome deve ser único
 - A validação dos dados de entrada é feita pelo schema do mongoose
 - A data de início deve ser menor do que a data de fim
@@ -13,7 +14,7 @@
 
 - O nome deve ser único
 - A data de início deve ser menor do que a data de fim
-- A data fim se for atualizada ou inserida após o cadastro deve ser maior do que a data de início 
+- A data fim se for atualizada ou inserida após o cadastro deve ser maior do que a data de início
 
 - [x] Feito
 
@@ -44,22 +45,25 @@
 - [x] Feito
 
 ## Cadastrar em um projeto
+
 - Será feito na rota de patch update
-- [] Feito
+- [x] Feito
 
 ## Atualizar
+
 - Será feito na rota de patch update
 - Qualquer um dos dados podem ser atualizados
 
-- [] Feito
+- [x] Feito
 
-## Apagar 
+## Apagar
 
 - [] Feito
 
 ## Remover de um projeto
+
 - Será feito na rota de patch update
-- [] Feito
+- [x] Feito
 
 ## Listar
 
@@ -70,7 +74,6 @@
 ### Listar vários
 
 - [x] Feito
-
 
 ---
 
