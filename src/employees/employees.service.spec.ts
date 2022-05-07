@@ -190,6 +190,37 @@ describe('EmployeesService', () => {
       );
     });
 
+    it("should update an employee's name when id is equal to its id", async () => {
+      const updateEmployeeDto = {
+        name: 'Test',
+      };
+
+      const expected = Object.assign(
+        {},
+        CONSTANTS.VALID_EMPLOYEE,
+        updateEmployeeDto,
+      );
+
+      const id = 'any';
+
+      const repositoryFindOneByNameSpy = jest.spyOn(
+        employeesMongoRepository,
+        'findOneByName',
+      );
+
+      const repositoryUpdateSpy = jest
+        .spyOn(employeesMongoRepository, 'update')
+        .mockResolvedValueOnce(expected);
+
+      const result = await employeeService.update(id, updateEmployeeDto);
+
+      expect(result).toMatchObject(expected);
+      expect(repositoryUpdateSpy).toHaveBeenCalledWith(id, updateEmployeeDto);
+      expect(repositoryFindOneByNameSpy).toHaveBeenCalledWith(
+        updateEmployeeDto.name,
+      );
+    });
+
     it('should throw when name already exists with another id', async () => {
       const updateEmployeeDto = {
         name: 'test',
