@@ -16,16 +16,25 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
 
   async create(employee: CreateEmployeeDto): Promise<Employee> {
     const newEmployee = await new this.employeeModel(employee);
-    return await newEmployee.save();
+    const docEmployee = await newEmployee.save();
+    return MongoHelper.map(docEmployee.toObject());
   }
 
   async update(
     id: string,
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
-    return await this.employeeModel.findByIdAndUpdate(id, updateEmployeeDto, {
-      returnDocument: 'after',
-    });
+    const docEmployee = await this.employeeModel.findByIdAndUpdate(
+      id,
+      updateEmployeeDto,
+      {
+        returnDocument: 'after',
+      },
+    );
+
+    if (!docEmployee) return null;
+
+    return MongoHelper.map(docEmployee.toObject());
   }
 
   async findOneByName(name: string): Promise<Employee> | undefined {
@@ -39,16 +48,19 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   }
 
   async findAll(): Promise<Employee[]> {
-    return await this.employeeModel.find({});
+    const docsEmployees = await this.employeeModel.find({});
+    return docsEmployees.map((docEmployee) =>
+      MongoHelper.map(docEmployee.toObject()),
+    );
   }
 
   async findById(id: string): Promise<Employee> | undefined {
     try {
-      const employee = await this.employeeModel.findById(id);
+      const docEmployee = await this.employeeModel.findById(id);
 
-      if (!employee) return null;
+      if (!docEmployee) return null;
 
-      return employee.toObject();
+      return MongoHelper.map(docEmployee.toObject());
     } catch (error) {
       return null;
     }
