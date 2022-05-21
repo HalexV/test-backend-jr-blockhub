@@ -38,6 +38,10 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
   }
 
   async delete(id: string): Promise<boolean> {
+    const docEmployee = await this.employeeModel.findByIdAndDelete(id);
+
+    if (!docEmployee) return false;
+
     return true;
   }
 
