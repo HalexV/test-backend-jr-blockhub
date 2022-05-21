@@ -326,6 +326,18 @@ describe('EmployeesService', () => {
       await expect(result).rejects.toThrowError('Employee not found');
       await expect(result).rejects.toBeInstanceOf(NotFoundError);
     });
+
+    it('should throw when delete throws', async () => {
+      const id = 'any';
+
+      jest
+        .spyOn(employeesMongoRepository, 'delete')
+        .mockRejectedValueOnce(new Error());
+
+      const result = employeeService.delete(id);
+
+      await expect(result).rejects.toThrow();
+    });
   });
 
   describe('findAll', () => {
