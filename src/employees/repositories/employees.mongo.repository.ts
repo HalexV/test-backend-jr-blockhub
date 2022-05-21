@@ -37,6 +37,10 @@ export class EmployeesMongoRepository implements IEmployeesRepository {
     return MongoHelper.map(docEmployee.toObject());
   }
 
+  async delete(id: string): Promise<boolean> {
+    return true;
+  }
+
   async findOneByName(name: string): Promise<Employee> | undefined {
     const docEmployee = await this.employeeModel.findOne({
       name: { $regex: `^${name}$`, $options: 'i' },
