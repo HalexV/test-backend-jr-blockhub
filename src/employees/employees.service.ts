@@ -64,6 +64,10 @@ export class EmployeesService {
     return employeeUpdated;
   }
 
+  async delete(id: string): Promise<void> {
+    await this.employeesRepository.delete(id);
+  }
+
   async findAll(): Promise<Employee[]> {
     return this.employeesRepository.findAll();
   }
