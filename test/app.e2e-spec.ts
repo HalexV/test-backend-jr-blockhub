@@ -870,6 +870,17 @@ describe('AppController (e2e)', () => {
         expect(response.status).toBe(204);
         expect(employee).toBeFalsy();
       });
+
+      it('should return 404 when the employee is not found', async () => {
+        const employeeId = '000000000000000000000001';
+
+        const response = await request(httpServer).delete(
+          `/employees/${employeeId}`,
+        );
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toStrictEqual('Employee not found');
+      });
     });
   });
 });
