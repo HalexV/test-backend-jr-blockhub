@@ -313,6 +313,19 @@ describe('EmployeesService', () => {
       await expect(result).resolves.toBeUndefined();
       expect(repositoryDeleteSpy).toHaveBeenCalledWith(id);
     });
+
+    it('should throw when the employee is not found', async () => {
+      const id = 'any';
+
+      jest
+        .spyOn(employeesMongoRepository, 'delete')
+        .mockResolvedValueOnce(false);
+
+      const result = employeeService.delete(id);
+
+      await expect(result).rejects.toThrowError('Employee not found');
+      await expect(result).rejects.toBeInstanceOf(NotFoundError);
+    });
   });
 
   describe('findAll', () => {
