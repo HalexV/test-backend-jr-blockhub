@@ -845,5 +845,31 @@ describe('AppController (e2e)', () => {
         );
       });
     });
+
+    describe('/employees/:id (DELETE)', () => {
+      it('should return 204 when deleting the employee', async () => {
+        const employeeId = '000000000000000000000001';
+
+        await dbConnection.collection('employees').insertOne({
+          _id: new Types.ObjectId(employeeId),
+          name: 'test',
+          post: 'tester',
+          admission: new Date('2022-02-22').toISOString(),
+          active: true,
+          projects: [],
+        });
+
+        const response = await request(httpServer).delete(
+          `/employees/${employeeId}`,
+        );
+
+        const employee = await dbConnection
+          .collection('employees')
+          .findOne({ _id: new Types.ObjectId(employeeId) });
+
+        expect(response.status).toBe(204);
+        expect(employee).toBeFalsy();
+      });
+    });
   });
 });
