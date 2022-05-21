@@ -65,7 +65,8 @@ export class EmployeesService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.employeesRepository.delete(id);
+    if (!(await this.employeesRepository.delete(id)))
+      throw new NotFoundError('Employee not found');
   }
 
   async findAll(): Promise<Employee[]> {
