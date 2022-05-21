@@ -53,6 +53,10 @@ class EmployeesMongoRepositoryStub {
     return CONSTANTS.VALID_UPDATED_EMPLOYEE;
   }
 
+  async delete() {
+    return true;
+  }
+
   async findOneByName() {
     return CONSTANTS.VALID_EMPLOYEE;
   }
@@ -152,7 +156,7 @@ describe('EmployeesService', () => {
     });
   });
 
-  describe('Update', () => {
+  describe('update', () => {
     it('should update an employee when valid data is inserted', async () => {
       const updateEmployeeDto = {
         name: 'new test',
@@ -292,6 +296,22 @@ describe('EmployeesService', () => {
 
       await expect(result).rejects.toThrow('Project invalid_id not found');
       await expect(result).rejects.toBeInstanceOf(NotFoundError);
+    });
+  });
+
+  describe('delete', () => {
+    it('should be able to delete an employee', async () => {
+      const id = 'any';
+
+      const repositoryDeleteSpy = jest.spyOn(
+        employeesMongoRepository,
+        'delete',
+      );
+
+      const result = employeeService.delete(id);
+
+      await expect(result).resolves.toBeUndefined();
+      expect(repositoryDeleteSpy).toHaveBeenCalledWith(id);
     });
   });
 
