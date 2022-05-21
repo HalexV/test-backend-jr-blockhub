@@ -7,6 +7,8 @@ import {
   Patch,
   Param,
   Get,
+  Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -48,6 +50,20 @@ export class EmployeesController {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       }
 
+      if (error.name === 'NotFoundError') {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+
+      throw error;
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async delete(@Param('id') id: string) {
+    try {
+      return await this.employeesService.delete(id);
+    } catch (error) {
       if (error.name === 'NotFoundError') {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND);
       }
